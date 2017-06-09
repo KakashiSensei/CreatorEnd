@@ -1,0 +1,39 @@
+.reset {
+    margin: 0px;
+    padding: 0px
+}
+
+.fileUploadSize {
+    width: 300px
+}
+
+.uploadedImageSize {
+    width: 100px;
+    height: 100px
+}
+
+.alignCenter {
+    text-align: center
+}
+
+.editorSize{
+    width: 100%;
+}
+
+.backgroundColor{
+    background-color: #26a69a;
+}
+
+.imageSize{
+    height: 100%;
+    vertical-align: middle;
+}
+
+.basePadding{
+    padding: 10px
+}
+
+iframeSize{
+    width: 698px;
+    height: 367px;
+}

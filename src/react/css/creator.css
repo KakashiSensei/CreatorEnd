@@ -1,0 +1,23 @@
+.iconStyle{
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.imageSize {
+    margin: auto;
+    max-width: 100px;
+    max-height: 100px;
+    float: left;
+}
+
+.textBox{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 110px;
+    margin: 0px
+}
+
+.paddingAround{
+    padding: 5px
+}
