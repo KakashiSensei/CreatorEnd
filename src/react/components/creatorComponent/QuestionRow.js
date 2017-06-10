@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Icon, Button } from 'react-materialize';
+import moment from "moment"
 
 export default class QuestionRow extends Component {
     static propType = {
@@ -9,22 +10,26 @@ export default class QuestionRow extends Component {
             title: PropTypes.string.isRequired,
             introImage: PropTypes.string.isRequired,
             dom: PropTypes.string.isRequired,
-        }).isRequired
+        }).isRequired,
+        editCallback: PropTypes.func,
+        deleteCallback: PropTypes.func
     }
 
     constructor(props) {
         super(props);
-        this.editClicked = this.editClicked.bind(this);
-        this.deleteClicked = this.deleteClicked.bind(this);
+        // this.editClicked = this.editClicked.bind(this);
+        // this.deleteClicked = this.deleteClicked.bind(this);
     }
 
-    editClicked(e) {
-        console.log("Edit Clicked");
-    }
+    // editClicked(e) {
+    //     debugger;
+    //     console.log("Edit Clicked", e);
+    // }
 
-    deleteClicked(e) {
-        console.log("Delete Clicked");
-    }
+    // deleteClicked(e) {
+    //     debugger;
+    //     console.log("Delete Clicked", e);
+    // }
 
     render() {
         return (
@@ -35,15 +40,19 @@ export default class QuestionRow extends Component {
                         <p className="textBox">
                             {this.props.element.title}
                         </p>
-                    </div></td>
+                    </div>
+                </td>
+                <td>
+                    {moment(this.props.element.updatedAt).fromNow()}
+                </td>
                 <td>
                     <div className="paddingAround">
-                        <Button floating onClick={this.editClicked}>
+                        <Button floating onClick={() => { this.props.editCallback(this.props.element) }}>
                             <Icon small>mode_edit</Icon>
                         </Button>
                     </div>
                     <div className="paddingAround">
-                        <Button floating onClick={this.deleteClicked}>
+                        <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
                             <Icon small>delete</Icon>
                         </Button>
                     </div>

@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import brace from 'brace';
 import AceEditor from 'react-ace';
-import { Input, Row, Col, Button, Navbar, NavItem } from 'react-materialize';
+import { Input, Row, Col, Button, Navbar, NavItem, Preloader } from 'react-materialize';
 import config from '../../config';
 import ImageUploaded from '../components/ImageUploaded';
 import InnerHtml from '../components/InnerHtml';
 import { Encoder } from 'node-html-encoder';
+import htmlBeautify from 'html-beautify';
+import { history } from '../../Routes';
 
 import 'brace/mode/html';
 import 'brace/theme/github';
@@ -16,6 +18,7 @@ export default class HomePage extends Component {
     facebookID;
     accessToken;
     facebookData;
+    id;
 
     constructor(props) {
         super(props);
@@ -26,9 +29,19 @@ export default class HomePage extends Component {
             introImage: "",
             outputText: "",
 
+            questionRetrived: true,
             loggedIn: false,
             dataRetrieved: false
         }
+
+        // update data with existing data
+        let pathname = this.props.location.pathname;
+        this.id = pathname.split('/')[2];
+
+        if (this.id) {
+            this.state.questionRetrived = false;
+        }
+
         this.onEditorChange = this.onEditorChange.bind(this);
         this.onFileUploaded = this.onFileUploaded.bind(this);
         this.uploadFile = this.uploadFile.bind(this);
@@ -57,6 +70,22 @@ export default class HomePage extends Component {
                 console.log("Unknown status");
             }
         });
+
+        if (this.id) {
+            let url = config.restAPI + "/api/game/" + this.id;
+            fetch(url, { method: 'GET' })
+                .then(res => res.json())
+                .then((data) => {
+                    console.log(data);
+                    this.setState({
+                        questionTitle: data.title,
+                        introImage: data.introImage,
+                        outputText: data.outputText,
+                        htmlWritten: htmlBeautify(data.dom),
+                        questionRetrived: true
+                    });
+                })
+        }
     }
 
     onTextChange(e) {
@@ -162,14 +191,19 @@ export default class HomePage extends Component {
         let questionHTML = this.state.htmlWritten;
 
         let data = {};
-        data["questionTitle"] = questionTitle;
+        data["title"] = questionTitle;
         data["introImage"] = introImage;
         data["outputText"] = outputText;
-        data["questionHTML"] = questionHTML;
+        data["dom"] = questionHTML;
 
+        let method = 'POST';
         let url = config.restAPI + "/api/game";
+        if (this.id) {
+            method = 'PUT';
+            url += "/" + this.id;
+        }
         fetch(url, {
-            method: 'POST',
+            method: method,
             body: JSON.stringify(data),
             headers: {
                 'Accept': 'application/json',
@@ -178,11 +212,20 @@ export default class HomePage extends Component {
         })
             .then(res => res.json())
             .then((data) => {
-                console.log(data);
+                let location = "/";
+                history.push(location)
             })
     }
 
     render() {
+        if (!this.state.questionRetrived) {
+            return <Row>
+                <Col s={12} className="circleCenter">
+                    <Preloader size='big' />
+                </Col>
+            </Row>
+        }
+
         let imgUploadComp = <div></div>
         if (this.state.imageUploaded.length > 0) {
             imgUploadComp = <ImageUploaded gameLink={this.state.imageUploaded} />;
@@ -195,7 +238,7 @@ export default class HomePage extends Component {
         // sending encoded html
         let encoder = new Encoder('entity');
         let parsedData = this.state.htmlWritten;
-        if(this.state.dataRetrieved){
+        if (this.state.dataRetrieved) {
             parsedData = this.facebookData.analizeDomElement(parsedData);
             console.log(parsedData);
         }
@@ -221,13 +264,13 @@ export default class HomePage extends Component {
                 <Row>
                     <Col s={6}>
                         <Row>
-                            <Input name="questionTitle" label="Question Title" s={12} onChange={this.onTextChange} />
+                            <Input defaultValue={this.state.questionTitle} name="questionTitle" label="Question Title" s={12} onChange={this.onTextChange} />
                         </Row>
                         <Row>
-                            <Input name="introImage" label="Intro Image" s={12} onChange={this.onTextChange} />
+                            <Input defaultValue={this.state.introImage} name="introImage" label="Intro Image" s={12} onChange={this.onTextChange} />
                         </Row>
                         <Row>
-                            <Input name="outputText" label="Output Text" s={12} onChange={this.onTextChange} />
+                            <Input defaultValue={this.state.outputText} name="outputText" label="Output Text" s={12} onChange={this.onTextChange} />
                         </Row>
                     </Col>
                     <Col s={5} offset="s1">
