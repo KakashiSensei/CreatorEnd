@@ -6,8 +6,11 @@ import config from '../../config';
 import ImageUploaded from '../components/ImageUploaded';
 import InnerHtml from '../components/InnerHtml';
 import { Encoder } from 'node-html-encoder';
-import htmlBeautify from 'html-beautify';
+// import htmlBeautify from 'html-beautify';
+import htmlBeautify from 'beautify';
 import { history } from '../../Routes';
+import ParseData from "wl-parser";
+import moment from "moment";
 
 import 'brace/mode/html';
 import 'brace/theme/github';
@@ -19,6 +22,8 @@ export default class HomePage extends Component {
     accessToken;
     facebookData;
     id;
+    autoSaveTime = 10;
+    setTimeOutId;
 
     constructor(props) {
         super(props);
@@ -45,9 +50,9 @@ export default class HomePage extends Component {
         this.onEditorChange = this.onEditorChange.bind(this);
         this.onFileUploaded = this.onFileUploaded.bind(this);
         this.uploadFile = this.uploadFile.bind(this);
-        this.addQuestionInDataBase = this.addQuestionInDataBase.bind(this);
         this.onTextChange = this.onTextChange.bind(this);
         this.onLoginClicked = this.onLoginClicked.bind(this);
+        this.submitClicked = this.submitClicked.bind(this);
     }
 
     componentDidMount() {
@@ -76,12 +81,13 @@ export default class HomePage extends Component {
             fetch(url, { method: 'GET' })
                 .then(res => res.json())
                 .then((data) => {
-                    console.log(data);
+                    let beautifiedText = htmlBeautify(data.dom, { format: 'css' });
+                    beautifiedText = htmlBeautify(beautifiedText, { format: 'html' });
                     this.setState({
                         questionTitle: data.title,
                         introImage: data.introImage,
                         outputText: data.outputText,
-                        htmlWritten: htmlBeautify(data.dom),
+                        htmlWritten: beautifiedText,
                         questionRetrived: true
                     });
                 })
@@ -100,6 +106,13 @@ export default class HomePage extends Component {
         this.setState({
             htmlWritten: e
         })
+
+        clearTimeout(this.setTimeOutId);
+        this.setTimeOutId = setTimeout(() => {
+            this.addQuestionInDataBase();
+            this.lastTime = moment();
+            console.log("Question saved in DB");
+        }, this.autoSaveTime * 1000);
     }
 
     onFileUploaded(e) {
@@ -152,7 +165,7 @@ export default class HomePage extends Component {
             })
                 .then(res => res.json())
                 .then((data) => {
-                    this.facebookData = new ParseData.default(data, Date.now());
+                    this.facebookData = new ParseData(data, Date.now());
                     this.setState({
                         dataRetrieved: true
                     })
@@ -167,7 +180,6 @@ export default class HomePage extends Component {
         xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                    console.log("Image Uploaded", url);
                     let newArray = JSON.parse(JSON.stringify(this.state.imageUploaded));
                     newArray.push(url);
                     this.setState({
@@ -183,7 +195,13 @@ export default class HomePage extends Component {
         xhr.send(file);
     }
 
-    addQuestionInDataBase(e) {
+    submitClicked(e) {
+        this.addQuestionInDataBase();
+        let location = "/";
+        history.push(location)
+    }
+
+    addQuestionInDataBase() {
         //make post request for adding question
         let questionTitle = this.state.questionTitle;
         let introImage = this.state.introImage;
@@ -212,8 +230,7 @@ export default class HomePage extends Component {
         })
             .then(res => res.json())
             .then((data) => {
-                let location = "/";
-                history.push(location)
+                console.log(data);
             })
     }
 
@@ -240,7 +257,6 @@ export default class HomePage extends Component {
         let parsedData = this.state.htmlWritten;
         if (this.state.dataRetrieved) {
             parsedData = this.facebookData.analizeDomElement(parsedData);
-            console.log(parsedData);
         }
         let encodedHTML = encoder.htmlEncode(parsedData);
         encodedHTML = "data:text/html;charset=utf-8," + encodedHTML;
@@ -286,30 +302,30 @@ export default class HomePage extends Component {
                         {imgUploadComp}
                     </Col>
                 </Row>
-                <Row>
-                    <Col s={5}>
-                        <AceEditor
-                            value={this.state.htmlWritten}
-                            enableBasicAutocompletion={true}
-                            enableLiveAutocompletion={true}
-                            mode="html"
-                            theme="github"
-                            onChange={this.onEditorChange}
-                            name="UNIQUE_ID_OF_DIV"
-                            editorProps={{ $blockScrolling: true }}
-                            width="100%"
-                        />
-                    </Col>
-                    <Col s={7}>
-                        <Row>
-                            <Col s={12}>
-                                <div className="iframeSize" dangerouslySetInnerHTML={{ __html: iframeHTML }}></div>
-                            </Col>
-                            <Col s={2}>
-                                <Button waves='light' onClick={this.addQuestionInDataBase}>submit</Button>
-                            </Col>
-                        </Row>
-                    </Col>
+                <Row className="relativePosition">
+                    <Row>
+                        <Col s={8}>
+                            <AceEditor className="aceBorder"
+                                value={this.state.htmlWritten}
+                                enableBasicAutocompletion={true}
+                                enableLiveAutocompletion={true}
+                                mode="html"
+                                theme="github"
+                                onChange={this.onEditorChange}
+                                name="UNIQUE_ID_OF_DIV"
+                                editorProps={{ $blockScrolling: true }}
+                                height="500px"
+                                width="100%"
+                                wrapEnabled={true}
+                                showPrintMargin={false}
+                            />
+                        </Col>
+                        <Col s={4}>
+                            <div className="iframeSize scaleDown" dangerouslySetInnerHTML={{ __html: iframeHTML }}></div>
+                            <Button waves='light' onClick={this.submitClicked}>submit</Button>
+                        </Col>
+                    </Row>
+
                 </Row>
             </div>
         )

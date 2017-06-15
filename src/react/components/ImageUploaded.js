@@ -15,11 +15,11 @@ export default class ImageUploaded extends Component {
         return (
 
             <div className="collection">
-                {this.props.gameLink && this.props.gameLink.map(() => {
-                    return <div className="collection-item">
+                {this.props.gameLink && this.props.gameLink.map((image, index) => {
+                    return <div key={index} className="collection-item">
                         <Row className="reset">
-                            <Col s={3}><img className="uploadedImageSize alignCenter" src={this.props.gameLink} /></Col>
-                            <Col s={9}>{this.props.gameLink}</Col>
+                            <Col s={3}><img className="uploadedImageSize alignCenter" src={image} /></Col>
+                            <Col s={9}>{image}</Col>
                         </Row>
                     </div>
                 })}

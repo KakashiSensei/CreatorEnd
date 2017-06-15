@@ -1,7 +1,7 @@
 let config = {
     restAPI: "http://localhost:3000",
     appID: "1866917183572616",
-    scope: "public_profile,email"
+    scope: "public_profile,email,user_photos,user_posts"
 }
 
 module.exports = config;

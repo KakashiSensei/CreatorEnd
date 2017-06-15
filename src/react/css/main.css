@@ -33,7 +33,27 @@
     padding: 10px
 }
 
-iframeSize{
+.iframeSize{
     width: 698px;
     height: 367px;
+    overflow: hidden
+}
+
+.relativePosition{
+    position: relative;
+}
+
+.scaleDown{
+    
+    -ms-zoom: 0.5;
+        -moz-transform: scale(0.5);
+        -moz-transfÏorm-origin: 0 0;
+        -o-transform: scale(0.5);
+        -o-transform-origin: 0 0;
+        -webkit-transform: scale(0.5);
+        -webkit-transform-origin: 0 0;
+}
+
+.aceBorder{
+    border: 1px solid #9e9e9e
 }

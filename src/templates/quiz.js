@@ -17,8 +17,6 @@ let template = `<html>
 
 <body class="bodyClass">
 	<div class="divClass">
-		{facebookData.getFriendFirstName(1)}
-		{facebookData.getMyFirstName()}
     </div>
 </body>
 
