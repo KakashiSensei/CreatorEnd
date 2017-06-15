@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import brace from 'brace';
-import AceEditor from 'react-ace';
 import { Input, Row, Col, Button, Navbar, NavItem, Preloader } from 'react-materialize';
 import config from '../../config';
 import ImageUploaded from '../components/ImageUploaded';
@@ -11,9 +10,7 @@ import htmlBeautify from 'beautify';
 import { history } from '../../Routes';
 import ParseData from "wl-parser";
 import moment from "moment";
-
-import 'brace/mode/html';
-import 'brace/theme/github';
+import AceEditorComp from "../components/creatorComponent/AceEditorComp";
 
 export default class HomePage extends Component {
     firstName;
@@ -48,6 +45,7 @@ export default class HomePage extends Component {
         }
 
         this.onEditorChange = this.onEditorChange.bind(this);
+        this.onOutputEditorChange = this.onOutputEditorChange.bind(this);
         this.onFileUploaded = this.onFileUploaded.bind(this);
         this.uploadFile = this.uploadFile.bind(this);
         this.onTextChange = this.onTextChange.bind(this);
@@ -105,6 +103,19 @@ export default class HomePage extends Component {
     onEditorChange(e) {
         this.setState({
             htmlWritten: e
+        })
+
+        clearTimeout(this.setTimeOutId);
+        this.setTimeOutId = setTimeout(() => {
+            this.addQuestionInDataBase();
+            this.lastTime = moment();
+            console.log("Question saved in DB");
+        }, this.autoSaveTime * 1000);
+    }
+
+    onOutputEditorChange(e) {
+        this.setState({
+            outputText: e
         })
 
         clearTimeout(this.setTimeOutId);
@@ -243,29 +254,30 @@ export default class HomePage extends Component {
             </Row>
         }
 
-        let imgUploadComp = <div></div>
+        let imageUploadComp = <div></div>
         if (this.state.imageUploaded.length > 0) {
-            imgUploadComp = <ImageUploaded gameLink={this.state.imageUploaded} />;
+            imageUploadComp = <ImageUploaded gameLink={this.state.imageUploaded} />
         }
-
-        // sending data to iframe
-        let iframeData = JSON.stringify(this.facebookData);
-
-
         // sending encoded html
         let encoder = new Encoder('entity');
         let parsedData = this.state.htmlWritten;
+        let parsedOutputData = this.state.outputText;
         if (this.state.dataRetrieved) {
             parsedData = this.facebookData.analizeDomElement(parsedData);
+            parsedOutputData = this.facebookData.analizeDomElement(parsedOutputData);
         }
         let encodedHTML = encoder.htmlEncode(parsedData);
         encodedHTML = "data:text/html;charset=utf-8," + encodedHTML;
 
-        let iframeHTML = "<iframe name='" + iframeData + "' src='" + encodedHTML + "' style='width:100%; height:367px'/>";
+        let encodedOutputHTML = encoder.htmlEncode(parsedOutputData);
+        encodedOutputHTML = "data:text/html;charset=utf-8," + encodedOutputHTML;
+
+        let iframeHTML = "<iframe src='" + encodedHTML + "' style='width:698px; height:367px'/>";
+        let iframeOutputHTML = "<iframe src='" + encodedOutputHTML + "' style='width:100%; height:100px'/>";
         let loginTag = <NavItem onClick={this.onLoginClicked}>login</NavItem>;
         if (this.state.loggedIn) {
             loginTag = <NavItem>
-                <img className="imageSize circle" src={this.profilePicture} />
+                <img className="iconImageSize circle" src={this.profilePicture} />
                 <span className="basePadding">{this.firstName}</span>
             </NavItem>
         }
@@ -285,9 +297,6 @@ export default class HomePage extends Component {
                         <Row>
                             <Input defaultValue={this.state.introImage} name="introImage" label="Intro Image" s={12} onChange={this.onTextChange} />
                         </Row>
-                        <Row>
-                            <Input defaultValue={this.state.outputText} name="outputText" label="Output Text" s={12} onChange={this.onTextChange} />
-                        </Row>
                     </Col>
                     <Col s={5} offset="s1">
                         <div className="file-field input-field">
@@ -299,33 +308,47 @@ export default class HomePage extends Component {
                                 <input className="file-path validate" type="text" placeholder="Upload file" />
                             </div>
                         </div>
-                        {imgUploadComp}
+                        {imageUploadComp}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col s={12}>
+                        <Row>
+                            <Col s={3} className="outputText">
+                                Output Text
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col s={6}>
+                                <AceEditorComp value={this.state.outputText} onChange={this.onOutputEditorChange} height="100px" />
+                            </Col>
+                            <Col s={6}>
+                                <div dangerouslySetInnerHTML={{ __html: iframeOutputHTML }}></div>
+                            </Col>
+                        </Row>
                     </Col>
                 </Row>
                 <Row className="relativePosition">
-                    <Row>
-                        <Col s={8}>
-                            <AceEditor className="aceBorder"
-                                value={this.state.htmlWritten}
-                                enableBasicAutocompletion={true}
-                                enableLiveAutocompletion={true}
-                                mode="html"
-                                theme="github"
-                                onChange={this.onEditorChange}
-                                name="UNIQUE_ID_OF_DIV"
-                                editorProps={{ $blockScrolling: true }}
-                                height="500px"
-                                width="100%"
-                                wrapEnabled={true}
-                                showPrintMargin={false}
-                            />
-                        </Col>
-                        <Col s={4}>
-                            <div className="iframeSize scaleDown" dangerouslySetInnerHTML={{ __html: iframeHTML }}></div>
-                            <Button waves='light' onClick={this.submitClicked}>submit</Button>
-                        </Col>
-                    </Row>
-
+                    <Col s={12}>
+                        <Row>
+                            <Col s={3} className="outputText">
+                                Dom Element
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col s={8}>
+                                <AceEditorComp value={this.state.htmlWritten} onChange={this.onEditorChange} height="500px" />
+                            </Col>
+                            <Col s={4}>
+                                <div className="iframeSize scaleDown" dangerouslySetInnerHTML={{ __html: iframeHTML }}></div>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col s={4}>
+                                <Button waves='light' onClick={this.submitClicked}>submit</Button>
+                            </Col>
+                        </Row>
+                    </Col>
                 </Row>
             </div>
         )
