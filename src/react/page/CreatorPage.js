@@ -177,8 +177,10 @@ export default class HomePage extends Component {
                 .then(res => res.json())
                 .then((data) => {
                     this.facebookData = new ParseData(data, Date.now());
-                    this.setState({
-                        dataRetrieved: true
+                    return this.facebookData.makeConnections().then(() => {
+                        this.setState({
+                            dataRetrieved: true
+                        })
                     })
                 })
         });

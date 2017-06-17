@@ -17,12 +17,12 @@
     "moment": "^2.18.1",
     "node-html-encoder": "^0.0.2",
     "prop-types": "^15.5.10",
-    "react": "^15.5.4",
+    "react": "^15.6.1",
     "react-ace": "^5.0.1",
-    "react-dom": "^15.5.4",
+    "react-dom": "^15.6.1",
     "react-materialize": "^1.0.1",
     "react-router-dom": "^4.1.1",
-    "wl-parser": "^1.0.6"
+    "wl-parser": "^1.0.7"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -36,7 +36,7 @@
     "css-loader": "^0.28.4",
     "file-loader": "^0.11.2",
     "style-loader": "^0.18.2",
-    "url-loader": "^0.5.8",
+    "url-loader": "^0.5.9",
     "webpack": "^2.6.1",
     "webpack-dev-server": "^2.4.5"
   }
