@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import brace from 'brace';
 import AceEditor from 'react-ace';
 
 import 'brace/mode/html';
-import 'brace/theme/github';
+import 'brace/snippets/html';
+import 'brace/theme/monokai';
+import 'brace/ext/language_tools';
+import 'brace/ext/searchbox';
+import 'brace/mode/jsx';
 
 export default class AceEditorComp extends Component {
     static propType = {
@@ -19,18 +24,24 @@ export default class AceEditorComp extends Component {
     render() {
         return (
             <AceEditor className="aceBorder"
-                value={this.props.value}
-                enableBasicAutocompletion={true}
-                enableLiveAutocompletion={true}
                 mode="html"
-                theme="github"
+                theme="monokai"
+                name="blah2"
+                onLoad={this.onLoad}
                 onChange={this.props.onChange}
-                name="UNIQUE_ID_OF_DIV"
-                editorProps={{ $blockScrolling: true }}
+                fontSize={14}
                 height={this.props.height}
                 width="100%"
+                showPrintMargin={true}
+                showGutter={true}
+                highlightActiveLine={false}
+                value={this.props.value}
                 wrapEnabled={true}
-                showPrintMargin={false}
+                editorProps={{ $blockScrolling: true }}
+                enableBasicAutocompletion={true}
+                enableLiveAutocompletion={true}
+                showLineNumbers={true}
+                tabSize={2}
             />
         )
     }
