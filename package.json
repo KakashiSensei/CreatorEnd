@@ -9,9 +9,7 @@
     "build": "webpack -p"
   },
   "dependencies": {
-    "beautify": "^0.0.8",
     "brace": "^0.10.0",
-    "html-beautify": "^1.0.4",
     "isomorphic-fetch": "^2.2.1",
     "materialize-css": "^0.98.2",
     "moment": "^2.18.1",

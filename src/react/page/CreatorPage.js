@@ -5,8 +5,6 @@ import config from '../../config';
 import ImageUploaded from '../components/ImageUploaded';
 import InnerHtml from '../components/InnerHtml';
 import { Encoder } from 'node-html-encoder';
-// import htmlBeautify from 'html-beautify';
-import htmlBeautify from 'beautify';
 import { history } from '../../Routes';
 import ParseData from "wl-parser";
 import moment from "moment";
@@ -79,13 +77,11 @@ export default class HomePage extends Component {
             fetch(url, { method: 'GET' })
                 .then(res => res.json())
                 .then((data) => {
-                    let beautifiedText = htmlBeautify(data.dom, { format: 'css' });
-                    beautifiedText = htmlBeautify(beautifiedText, { format: 'html' });
                     this.setState({
                         questionTitle: data.title,
                         introImage: data.introImage,
                         outputText: data.outputText,
-                        htmlWritten: beautifiedText,
+                        htmlWritten: data.dom,
                         questionRetrived: true
                     });
                 })

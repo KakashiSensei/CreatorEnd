@@ -27,12 +27,11 @@ export default class AceEditorComp extends Component {
                 mode="html"
                 theme="monokai"
                 name="blah2"
-                onLoad={this.onLoad}
                 onChange={this.props.onChange}
                 fontSize={14}
                 height={this.props.height}
                 width="100%"
-                showPrintMargin={true}
+                showPrintMargin={false}
                 showGutter={true}
                 highlightActiveLine={false}
                 value={this.props.value}
@@ -41,6 +40,7 @@ export default class AceEditorComp extends Component {
                 enableBasicAutocompletion={true}
                 enableLiveAutocompletion={true}
                 showLineNumbers={true}
+                enableSnippets={true}
                 tabSize={2}
             />
         )
