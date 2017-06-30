@@ -6,10 +6,13 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --progress --inline --hot",
-    "build": "webpack -p --config webpack.config.prod"
+    "build": "webpack -p --config webpack.config.prod",
+    "postinstall": "npm run build",
+    "heroku": "node node/startServer"
   },
   "dependencies": {
     "brace": "^0.10.0",
+    "express": "^4.15.3",
     "isomorphic-fetch": "^2.2.1",
     "materialize-css": "^0.98.2",
     "moment": "^2.18.1",
