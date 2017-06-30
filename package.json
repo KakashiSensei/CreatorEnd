@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --progress --inline --hot",
-    "build": "webpack -p"
+    "build": "webpack -p --config webpack.config.prod"
   },
   "dependencies": {
     "brace": "^0.10.0",
