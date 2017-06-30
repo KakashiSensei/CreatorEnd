@@ -49,6 +49,7 @@ export default class HomePage extends Component {
         this.onTextChange = this.onTextChange.bind(this);
         this.onLoginClicked = this.onLoginClicked.bind(this);
         this.submitClicked = this.submitClicked.bind(this);
+        this.onIntroImageAdded = this.onIntroImageAdded.bind(this);
     }
 
     componentDidMount() {
@@ -94,6 +95,40 @@ export default class HomePage extends Component {
         let tempObject = {};
         tempObject[name] = value;
         this.setState(tempObject);
+    }
+
+    onIntroImageAdded(e) {
+        let value = e.currentTarget.value;
+        this.setState({
+            introImage: value
+        })
+        if (value.trim() === "" && value.match(/\.(jpeg|jpg|gif|png)$/) === null) {
+            return;
+        }
+        let name = e.currentTarget.name;
+        let tempObject = {};
+        tempObject[name] = value;
+
+        let url = config.restAPI + "/api/resizeImage";
+        let bodydata = {};
+        bodydata.url = value;
+        let stringifiedObject = JSON.stringify(bodydata);
+        fetch(url, {
+            method: 'POST',
+            body: stringifiedObject,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(res => res.json())
+            .then((data) => {
+                this.setState({
+                    introImage: data.Location
+                })
+            })
+
+        // this.setState(tempObject);
     }
 
     onEditorChange(e) {
@@ -205,9 +240,11 @@ export default class HomePage extends Component {
     }
 
     submitClicked(e) {
-        this.addQuestionInDataBase();
-        let location = "/";
-        history.push(location)
+        this.addQuestionInDataBase().then(() => {
+            let location = "/";
+            history.push(location);
+        })
+
     }
 
     addQuestionInDataBase() {
@@ -229,7 +266,7 @@ export default class HomePage extends Component {
             method = 'PUT';
             url += "/" + this.id;
         }
-        fetch(url, {
+        return fetch(url, {
             method: method,
             body: JSON.stringify(data),
             headers: {
@@ -293,7 +330,12 @@ export default class HomePage extends Component {
                             <Input defaultValue={this.state.questionTitle} name="questionTitle" label="Question Title" s={12} onChange={this.onTextChange} />
                         </Row>
                         <Row>
-                            <Input defaultValue={this.state.introImage} name="introImage" label="Intro Image" s={12} onChange={this.onTextChange} />
+                            <Col s={3}>
+                            <img src={this.state.introImage} className="introImage"/>
+                            </Col>
+                            <Col s={9}>
+                            <Input value={this.state.introImage} name="introImage" label="Intro Image" s={12} onChange={this.onIntroImageAdded} />
+                            </Col>
                         </Row>
                     </Col>
                     <Col s={5} offset="s1">

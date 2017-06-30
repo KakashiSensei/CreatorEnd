@@ -74,7 +74,7 @@ export default class HomePage extends Component {
                                 <tbody>
                                     {this.state.dataReceived && this.state.dataReceived.map((element, index) => {
                                         return (
-                                            <QuestionRow editCallback={this.editClicked} deleteCallback={this.deleteClicked} element={element} key={element._id} />
+                                            <QuestionRow editCallback={this.editClicked} deleteCallback={this.deleteClicked} element={element} key={element.updatedAt} />
                                         )
                                     })}
                                 </tbody>
