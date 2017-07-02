@@ -1,10 +1,11 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
     entry: path.join(__dirname, "src", "index.js"),
     output: {
         path: path.join(__dirname, "dist"),
-        filename: "bundle.js"       
+        filename: "bundle.js"
     },
     devtool: 'eval',
     resolve: {
@@ -50,5 +51,14 @@ module.exports = {
                 loader: "file-loader?name=src/asset/font/[name].[ext]"
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': JSON.stringify('development'),
+                'REST_API': JSON.stringify('http://localhost:3000'),
+                'APP_ID': JSON.stringify("1866917183572616")
+            }
+        }),
+    ]
 }

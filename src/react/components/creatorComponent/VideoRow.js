@@ -2,29 +2,41 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Icon, Button } from 'react-materialize';
 import moment from "moment";
+import Requests from "../../../Requests";
 import {history} from "../../../Routes";
 
-export default class QuestionRow extends Component {
+export default class VideoRow extends Component {
     static propType = {
         element: PropTypes.shape({
             _id: PropTypes.number.isRequired,
-            title: PropTypes.string.isRequired,
-            introImage: PropTypes.string.isRequired,
-            dom: PropTypes.string.isRequired,
+            videoID: PropTypes.string.isRequired
         }).isRequired,
-        editCallback: PropTypes.func,
         deleteCallback: PropTypes.func
     }
 
     constructor(props) {
         super(props);
+        this.state = {
+            title: null,
+            thumbnail: null
+        }
         this.editClicked = this.editClicked.bind(this);
     }
 
     editClicked(e) {
         let id = e._id;
-        let location = "/quizedit/" + id;
+        let location = "/videoedit/" + id;
         history.push(location);
+    }
+
+    componentDidMount() {
+        Requests.getVideoDetails(this.props.element.videoID)
+        .then((data)=>{
+            this.setState({
+                title: data.items[0]["snippet"]["title"],
+                thumbnail: data.items[0]["snippet"]["thumbnails"]["medium"]["url"]
+            })
+        })
     }
 
     render() {
@@ -32,9 +44,9 @@ export default class QuestionRow extends Component {
             <tr key={this.props.element._id}>
                 <td>
                     <div>
-                        <img className="imageSize" src={this.props.element.introImage} />
+                        <img className="imageSize" src={this.state.thumbnail} />
                         <p className="textBox">
-                            {this.props.element.title}
+                            {this.state.title}
                         </p>
                     </div>
                 </td>

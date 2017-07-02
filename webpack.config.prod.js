@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
     entry: path.join(__dirname, "src", "index.js"),
@@ -50,5 +51,14 @@ module.exports = {
                 loader: "file-loader?name=src/asset/font/[name].[ext]"
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': JSON.stringify('development'),
+                'REST_API': JSON.stringify('https://white-light-rest-api.herokuapp.com'),
+                'APP_ID': JSON.stringify("399964337042548")
+            }
+        }),
+    ]
 }

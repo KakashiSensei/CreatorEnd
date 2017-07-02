@@ -3,7 +3,6 @@ import brace from 'brace';
 import { Input, Row, Col, Button, Navbar, NavItem, Preloader } from 'react-materialize';
 import config from '../../config';
 import ImageUploaded from '../components/ImageUploaded';
-import InnerHtml from '../components/InnerHtml';
 import { Encoder } from 'node-html-encoder';
 import { history } from '../../Routes';
 import ParseData from "wl-parser";
@@ -73,6 +72,7 @@ export default class HomePage extends Component {
             }
         });
 
+        // retrieve the question
         if (this.id) {
             let url = config.restAPI + "/api/game/" + this.id;
             fetch(url, { method: 'GET' })
@@ -244,7 +244,6 @@ export default class HomePage extends Component {
             let location = "/";
             history.push(location);
         })
-
     }
 
     addQuestionInDataBase() {

@@ -57,3 +57,9 @@
 .aceBorder{
     border: 1px solid #9e9e9e
 }
+
+.fixedPosition {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+}
