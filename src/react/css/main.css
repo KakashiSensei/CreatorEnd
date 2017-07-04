@@ -16,6 +16,10 @@
     text-align: center
 }
 
+.alignRight{
+    text-align: right;
+}
+
 .editorSize{
     width: 100%;
 }

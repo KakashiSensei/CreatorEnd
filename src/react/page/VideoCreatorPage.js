@@ -65,6 +65,14 @@ export default class VideoCreatorPage extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        var routeChanged = nextProps.location === this.props.location
+        if (routeChanged) {
+            let location = "/";
+            history.push(location);
+        }
+    }
+
     updateLoginDetails(response) {
         var uid = response.authResponse.userID;
         var accessToken = response.authResponse.accessToken;
@@ -109,8 +117,7 @@ export default class VideoCreatorPage extends Component {
 
     submitClicked(e) {
         this.addQuestionInDataBase().then(() => {
-            let location = "/";
-            history.push(location);
+            history.goBack();
         })
     }
 

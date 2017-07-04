@@ -4,10 +4,11 @@ import { Input, Row, Col, Button, Navbar, NavItem, Preloader } from 'react-mater
 import config from '../../config';
 import ImageUploaded from '../components/ImageUploaded';
 import { Encoder } from 'node-html-encoder';
-import { history } from '../../Routes';
+import { history, lastRoute } from '../../Routes';
 import ParseData from "wl-parser";
 import moment from "moment";
 import AceEditorComp from "../components/creatorComponent/AceEditorComp";
+
 
 export default class HomePage extends Component {
     firstName;
@@ -86,6 +87,14 @@ export default class HomePage extends Component {
                         questionRetrived: true
                     });
                 })
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        var routeChanged = nextProps.location === this.props.location
+        if(routeChanged){
+            let location = "/";
+            history.push(location);
         }
     }
 
@@ -241,8 +250,7 @@ export default class HomePage extends Component {
 
     submitClicked(e) {
         this.addQuestionInDataBase().then(() => {
-            let location = "/";
-            history.push(location);
+            history.goBack();
         })
     }
 
@@ -330,10 +338,10 @@ export default class HomePage extends Component {
                         </Row>
                         <Row>
                             <Col s={3}>
-                            <img src={this.state.introImage} className="introImage"/>
+                                <img src={this.state.introImage} className="introImage" />
                             </Col>
                             <Col s={9}>
-                            <Input value={this.state.introImage} name="introImage" label="Intro Image" s={12} onChange={this.onIntroImageAdded} />
+                                <Input value={this.state.introImage} name="introImage" label="Intro Image" s={12} onChange={this.onIntroImageAdded} />
                             </Col>
                         </Row>
                     </Col>

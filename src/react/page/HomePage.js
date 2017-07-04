@@ -49,7 +49,7 @@ export default class HomePage extends Component {
             })
     }
 
-    deleteVideoClicked(e){
+    deleteVideoClicked(e) {
         let url = config.restAPI + "/api/video/" + e._id;
         fetch(url, { method: 'DELETE' })
             .then(res => res.json())
@@ -83,9 +83,15 @@ export default class HomePage extends Component {
                     </Row>
                     <Row>
                         <Col s={10}>
-                            <QuizDisplayTable data={this.state.quizDataReceived} deleteCallback={this.deleteQuizClicked}/>
+                            <QuizDisplayTable data={this.state.quizDataReceived} deleteCallback={this.deleteQuizClicked} />
                         </Col>
                     </Row>
+                    <Row>
+                        <Col s={9} className="alignRight">
+                            <Link to="/quiz">more...</Link>
+                        </Col>
+                    </Row>
+
 
                     <Row>
                         <Col s={5}>
@@ -94,7 +100,12 @@ export default class HomePage extends Component {
                     </Row>
                     <Row>
                         <Col s={10}>
-                            <VideoDisplayTable data={this.state.videoDataReceived} deleteCallback={this.deleteVideoClicked}/>
+                            <VideoDisplayTable data={this.state.videoDataReceived} deleteCallback={this.deleteVideoClicked} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col s={9} className="alignRight">
+                            <Link to="/video">more...</Link>
                         </Col>
                     </Row>
                 </div>
