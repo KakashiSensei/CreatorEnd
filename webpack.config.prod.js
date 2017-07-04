@@ -55,7 +55,7 @@ module.exports = {
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
-                'NODE_ENV': JSON.stringify('development'),
+                'NODE_ENV': JSON.stringify('production'),
                 'REST_API': JSON.stringify('https://white-light-rest-api.herokuapp.com'),
                 'APP_ID': JSON.stringify("399964337042548")
             }

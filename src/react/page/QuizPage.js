@@ -3,6 +3,7 @@ import Request from "../../Requests";
 import { Row, Col, Button, Table, tr, th, thead, tbody, Dropdown, NavItem } from 'react-materialize';
 import QuizDisplayTable from "../components/QuizDisplayTable";
 import Helper from "../../Helper";
+import { Link } from 'react-router-dom';
 
 export default class HomePage extends Component {
     constructor(props) {
@@ -36,6 +37,11 @@ export default class HomePage extends Component {
     render() {
         return (
             <div>
+                <div className="fixedPosition">
+                    <Link to='/newquiz'>
+                        <Button floating large className='backgroundColor iconStyle' waves='light' icon='add' />
+                    </Link>
+                </div>
                 <Row>
                     <Col s={5}>
                         <h5>Quizes</h5>

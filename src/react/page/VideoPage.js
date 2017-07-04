@@ -3,6 +3,7 @@ import Request from "../../Requests";
 import { Row, Col, Button, Table, tr, th, thead, tbody, Dropdown, NavItem } from 'react-materialize';
 import VideoDisplayTable from "../components/VideoDisplayTable";
 import Helper from "../../Helper";
+import { Link } from 'react-router-dom';
 
 export default class VideoPage extends Component {
     constructor(props) {
@@ -34,6 +35,11 @@ export default class VideoPage extends Component {
     render() {
         return (
             <div>
+                <div className="fixedPosition">
+                    <Link to='/newvideo'>
+                        <Button floating large className='backgroundColor iconStyle' waves='light' icon='add' />
+                    </Link>
+                </div>
                 <Row>
                     <Col s={5}>
                         <h5>Video</h5>
