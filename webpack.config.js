@@ -17,7 +17,8 @@ module.exports = {
         chunks: true
     },
     devServer: {
-        publicPath: "/dist"
+        publicPath: "/dist",
+        historyApiFallback: true
     },
     module: {
         rules: [

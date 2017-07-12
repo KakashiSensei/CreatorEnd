@@ -250,7 +250,8 @@ export default class HomePage extends Component {
 
     submitClicked(e) {
         this.addQuestionInDataBase().then(() => {
-            history.goBack();
+            let location = "/";
+            history.push(location);
         })
     }
 
