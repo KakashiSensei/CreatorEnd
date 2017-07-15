@@ -24,8 +24,7 @@
     "react-materialize": "^1.0.1",
     "react-router-dom": "^4.1.1",
     "wl-parser": "^1.0.7",
-    "youtube-embed-video": "^1.0.2",
-    "youtube-node": "^1.3.2"
+    "youtube-embed-video": "^1.0.2"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
