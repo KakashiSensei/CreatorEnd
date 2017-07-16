@@ -133,7 +133,7 @@ export default class HomePage extends Component {
             .then(res => res.json())
             .then((data) => {
                 this.setState({
-                    introImage: data.Location
+                    introImage: data.location
                 })
             })
 
