@@ -114,13 +114,16 @@ export default class HomePage extends Component {
         if (value.trim() === "" && value.match(/\.(jpeg|jpg|gif|png)$/) === null) {
             return;
         }
+
         let name = e.currentTarget.name;
-        let tempObject = {};
-        tempObject[name] = value;
 
         let url = config.restAPI + "/api/resizeImage";
+
         let bodydata = {};
         bodydata.url = value;
+        bodydata.width = 800;
+        bodydata.height = 425;
+
         let stringifiedObject = JSON.stringify(bodydata);
         fetch(url, {
             method: 'POST',
@@ -136,8 +139,6 @@ export default class HomePage extends Component {
                     introImage: data.location
                 })
             })
-
-        // this.setState(tempObject);
     }
 
     onEditorChange(e) {
