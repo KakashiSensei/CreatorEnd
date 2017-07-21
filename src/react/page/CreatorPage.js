@@ -45,7 +45,6 @@ export default class HomePage extends Component {
         this.onEditorChange = this.onEditorChange.bind(this);
         this.onOutputEditorChange = this.onOutputEditorChange.bind(this);
         this.onFileUploaded = this.onFileUploaded.bind(this);
-        this.uploadFile = this.uploadFile.bind(this);
         this.onTextChange = this.onTextChange.bind(this);
         this.onLoginClicked = this.onLoginClicked.bind(this);
         this.submitClicked = this.submitClicked.bind(this);
@@ -92,7 +91,7 @@ export default class HomePage extends Component {
 
     componentWillReceiveProps(nextProps) {
         var routeChanged = nextProps.location === this.props.location
-        if(routeChanged){
+        if (routeChanged) {
             let location = "/";
             history.push(location);
         }
@@ -170,12 +169,38 @@ export default class HomePage extends Component {
     onFileUploaded(e) {
         let target = e.currentTarget.files[0];
         let fileName = e.currentTarget.files[0].name;
-        let url = config.restAPI + "/api/aws?file-name=" + fileName + "&file-type=" + target.type;
-        fetch(url, { method: 'GET' })
-            .then(res => res.json())
-            .then((data) => {
-                this.uploadFile(target, data.signedRequest, data.url)
+
+        let reader = new FileReader();
+        reader.onload = (event) => {
+            let data = event.target.result.replace("data:" + target.type + ";base64,", '');
+            let maxWidth = "698px";
+            let maxHeight = "367px";
+            let url = config.restAPI + "/api/resizeImage";
+            let postData = {};
+            postData.data = data;
+            postData.maxWidth = maxWidth;
+            postData.maxHeight = maxHeight;
+            postData.type = fileName.substr(fileName.lastIndexOf('.') + 1);
+
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
             })
+                .then(res => res.json())
+                .then((data) => {
+                    let newArray = JSON.parse(JSON.stringify(this.state.imageUploaded));
+                    newArray.push(data.location);
+                    this.setState({
+                        imageUploaded: newArray
+                    })
+                })
+
+        }
+        reader.readAsDataURL(target);
     }
 
     onLoginClicked(e) {
@@ -225,28 +250,6 @@ export default class HomePage extends Component {
                     })
                 })
         });
-    }
-
-    uploadFile(file, signedURL, url) {
-        const xhr = new XMLHttpRequest();
-        xhr.open('PUT', signedURL, true);
-        xhr.setRequestHeader('Content-Type', file.type);
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    let newArray = JSON.parse(JSON.stringify(this.state.imageUploaded));
-                    newArray.push(url);
-                    this.setState({
-                        imageUploaded: newArray
-                    })
-
-                }
-                else {
-                    alert('Could not upload file.');
-                }
-            }
-        };
-        xhr.send(file);
     }
 
     submitClicked(e) {
