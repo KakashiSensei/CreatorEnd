@@ -18,3 +18,15 @@ exports.getVideoDetails = (videoID) => {
     return fetch(url, { method: 'GET' })
         .then(res => res.json())
 }
+
+exports.resizeImageRequest = (postData) => {
+    let url = config.restAPI + "/api/resizeImage";
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+    }).then(res => res.json())
+}

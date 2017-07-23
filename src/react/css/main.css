@@ -67,3 +67,11 @@
     right: 20px;
     top: 20px;
 }
+
+.flexDisplay {
+    display: flex;
+}
+
+.flexCenter {
+    align-self: center;
+}

@@ -8,6 +8,7 @@ import { history, lastRoute } from '../../Routes';
 import ParseData from "wl-parser";
 import moment from "moment";
 import AceEditorComp from "../components/creatorComponent/AceEditorComp";
+import Request from "../../Requests";
 
 
 export default class HomePage extends Component {
@@ -49,6 +50,9 @@ export default class HomePage extends Component {
         this.onLoginClicked = this.onLoginClicked.bind(this);
         this.submitClicked = this.submitClicked.bind(this);
         this.onIntroImageAdded = this.onIntroImageAdded.bind(this);
+        this.onIntroImageUploaded = this.onIntroImageUploaded.bind(this);
+        this.onUploadFromURL = this.onUploadFromURL.bind(this);
+        this.addImageToDisplay = this.addImageToDisplay.bind(this);
     }
 
     componentDidMount() {
@@ -105,41 +109,6 @@ export default class HomePage extends Component {
         this.setState(tempObject);
     }
 
-    onIntroImageAdded(e) {
-        let value = e.currentTarget.value;
-        this.setState({
-            introImage: value
-        })
-        if (value.trim() === "" && value.match(/\.(jpeg|jpg|gif|png)$/) === null) {
-            return;
-        }
-
-        let name = e.currentTarget.name;
-
-        let url = config.restAPI + "/api/resizeImage";
-
-        let bodydata = {};
-        bodydata.url = value;
-        bodydata.width = 800;
-        bodydata.height = 425;
-
-        let stringifiedObject = JSON.stringify(bodydata);
-        fetch(url, {
-            method: 'POST',
-            body: stringifiedObject,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        })
-            .then(res => res.json())
-            .then((data) => {
-                this.setState({
-                    introImage: data.location
-                })
-            })
-    }
-
     onEditorChange(e) {
         this.setState({
             htmlWritten: e
@@ -166,6 +135,22 @@ export default class HomePage extends Component {
         }, this.autoSaveTime * 1000);
     }
 
+    onUploadFromURL(e) {
+        let target = e.currentTarget.value;
+        let postData = {};
+        let maxWidth = "698px";
+        let maxHeight = "367px";
+        postData.url = target;
+        postData.maxWidth = maxWidth;
+        postData.maxHeight = maxHeight;
+        postData.type = target.substr(target.lastIndexOf('.') + 1);
+
+
+
+        Request.resizeImageRequest(postData)
+            .then(this.addImageToDisplay);
+    }
+
     onFileUploaded(e) {
         let target = e.currentTarget.files[0];
         let fileName = e.currentTarget.files[0].name;
@@ -175,31 +160,71 @@ export default class HomePage extends Component {
             let data = event.target.result.replace("data:" + target.type + ";base64,", '');
             let maxWidth = "698px";
             let maxHeight = "367px";
-            let url = config.restAPI + "/api/resizeImage";
+
             let postData = {};
             postData.data = data;
             postData.maxWidth = maxWidth;
             postData.maxHeight = maxHeight;
             postData.type = fileName.substr(fileName.lastIndexOf('.') + 1);
-            fetch(url, {
-                method: 'POST',
-                body: JSON.stringify(postData),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-            })
-                .then(res => res.json())
-                .then((data) => {
-                    let newArray = JSON.parse(JSON.stringify(this.state.imageUploaded));
-                    newArray.push(data.location);
-                    this.setState({
-                        imageUploaded: newArray
-                    })
-                })
 
+            Request.resizeImageRequest(postData)
+                .then(this.addImageToDisplay);
         }
         reader.readAsDataURL(target);
+    }
+
+    onIntroImageAdded(e) {
+        let value = e.currentTarget.value;
+        if (value.trim() === "" && value.match(/\.(jpeg|jpg|gif|png)$/) === null) {
+            return;
+        }
+
+        let name = e.currentTarget.name;
+
+        let url = config.restAPI + "/api/resizeImage";
+
+        let bodydata = {};
+        bodydata.url = value;
+        bodydata.width = "800px";
+        bodydata.height = "425px";
+        Request.resizeImageRequest(bodydata)
+            .then((data) => {
+                this.setState({
+                    introImage: data.location
+                })
+            });
+    }
+
+    onIntroImageUploaded(e) {
+        let target = e.currentTarget.files[0];
+        let fileName = e.currentTarget.files[0].name;
+
+        let reader = new FileReader();
+        reader.onload = (event) => {
+            let data = event.target.result.replace("data:" + target.type + ";base64,", '');
+
+            let postData = {};
+            postData.data = data;
+            postData.width = "800px";
+            postData.height = "425px";
+
+            Request.resizeImageRequest(postData)
+                .then((data) => {
+                    debugger;
+                    this.setState({
+                        introImage: data.location
+                    })
+                });
+        }
+        reader.readAsDataURL(target);
+    }
+
+    addImageToDisplay(data) {
+        let newArray = JSON.parse(JSON.stringify(this.state.imageUploaded));
+        newArray.push(data.location);
+        this.setState({
+            imageUploaded: newArray
+        })
     }
 
     onLoginClicked(e) {
@@ -345,20 +370,39 @@ export default class HomePage extends Component {
                                 <img src={this.state.introImage} className="introImage" />
                             </Col>
                             <Col s={9}>
-                                <Input value={this.state.introImage} name="introImage" label="Intro Image" s={12} onChange={this.onIntroImageAdded} />
+                                <input type="file" id="introFileSelected" ref="introFileSelected" style={{ display: "none", alignSelf: "flex-end" }} onChange={this.onIntroImageUploaded} />
+                                <Row className="flexDisplay">
+                                    <Col s={4} className="flexCenter">
+                                        <span><Button waves='light' onClick={() => { return this.refs.introFileSelected.click() }}>Browse</Button></span>
+                                    </Col>
+                                    <Col s={1} className="flexCenter">
+                                        OR
+                                    </Col>
+                                    <Col s={7} className="flexCenter">
+                                        <Input placeholder="Enter URL" s={12} onChange={this.onIntroImageAdded} />
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col s={12}>
+                                        <div> {this.state.introImage} </div>
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                     </Col>
                     <Col s={5} offset="s1">
-                        <div className="file-field input-field">
-                            <div className="btn">
-                                <span>FILE</span>
-                                <input type="file" onChange={this.onFileUploaded} />
-                            </div>
-                            <div className="file-path-wrapper">
-                                <input className="file-path validate" type="text" placeholder="Upload file" />
-                            </div>
-                        </div>
+                        <input type="file" id="selectedFile" ref="selectedFile" style={{ display: "none", alignSelf: "flex-end" }} onChange={this.onFileUploaded} />
+                        <Row className="flexDisplay">
+                            <Col s={4} className="flexCenter">
+                                <span><Button waves='light' onClick={() => { return this.refs.selectedFile.click() }}>Browse</Button></span>
+                            </Col>
+                            <Col s={1} className="flexCenter">
+                                OR
+                            </Col>
+                            <Col s={7} className="flexCenter">
+                                <Input placeholder="Enter URL" s={12} onChange={this.onUploadFromURL} />
+                            </Col>
+                        </Row>
                         {imageUploadComp}
                     </Col>
                 </Row>

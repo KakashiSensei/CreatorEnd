@@ -13,7 +13,6 @@ export default class ImageUploaded extends Component {
 
     render() {
         return (
-
             <div className="collection">
                 {this.props.gameLink && this.props.gameLink.map((image, index) => {
                     return <div key={index} className="collection-item">
