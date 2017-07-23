@@ -181,7 +181,6 @@ export default class HomePage extends Component {
             postData.maxWidth = maxWidth;
             postData.maxHeight = maxHeight;
             postData.type = fileName.substr(fileName.lastIndexOf('.') + 1);
-
             fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(postData),
