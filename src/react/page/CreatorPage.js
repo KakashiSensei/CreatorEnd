@@ -27,6 +27,7 @@ export default class HomePage extends Component {
             imageUploaded: [],
             htmlWritten: "",
             questionTitle: "",
+            description: "",
             introImage: "",
             outputText: "",
 
@@ -84,6 +85,7 @@ export default class HomePage extends Component {
                 .then((data) => {
                     this.setState({
                         questionTitle: data.title,
+                        description: data.description,
                         introImage: data.introImage,
                         outputText: data.outputText,
                         htmlWritten: data.dom,
@@ -286,12 +288,14 @@ export default class HomePage extends Component {
     addQuestionInDataBase() {
         //make post request for adding question
         let questionTitle = this.state.questionTitle;
+        let description = this.state.description;
         let introImage = this.state.introImage;
         let outputText = this.state.outputText;
         let questionHTML = this.state.htmlWritten;
 
         let data = {};
         data["title"] = questionTitle;
+        data["description"] = description;
         data["introImage"] = introImage;
         data["outputText"] = outputText;
         data["dom"] = questionHTML;
@@ -364,6 +368,9 @@ export default class HomePage extends Component {
                     <Col s={6}>
                         <Row>
                             <Input defaultValue={this.state.questionTitle} name="questionTitle" label="Question Title" s={12} onChange={this.onTextChange} />
+                        </Row>
+                        <Row>
+                            <Input defaultValue={this.state.description} name="description" label="Description" s={12} onChange={this.onTextChange} />
                         </Row>
                         <Row>
                             <Col s={3}>
