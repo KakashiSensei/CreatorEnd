@@ -3,12 +3,14 @@ import PropTypes from "prop-types";
 import { Icon, Button } from 'react-materialize';
 import moment from "moment";
 import {history} from "../../../Routes";
+import config from "../../../config";
 
 export default class QuestionRow extends Component {
     static propType = {
         element: PropTypes.shape({
             _id: PropTypes.number.isRequired,
             title: PropTypes.string.isRequired,
+            description: PropTypes.string.isRequired,
             introImage: PropTypes.string.isRequired,
             dom: PropTypes.string.isRequired,
         }).isRequired,
@@ -27,6 +29,26 @@ export default class QuestionRow extends Component {
         history.push(location);
     }
 
+    duplicateClicked(e){
+        let data = this.props.element
+
+        let method = 'POST';
+        let url = config.restAPI + "/api/game";
+        return fetch(url, {
+            method: method,
+            body: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(res => res.json())
+            .then((data) => {
+                let location = "/quizedit/" + data._id;
+                history.push(location);
+            })
+    }
+
     render() {
         return (
             <tr key={this.props.element._id}>
@@ -42,16 +64,21 @@ export default class QuestionRow extends Component {
                     {moment(this.props.element.updatedAt).fromNow()}
                 </td>
                 <td>
-                    <div className="paddingAround">
+                    <span className="paddingAround">
                         <Button floating onClick={() => { this.editClicked(this.props.element) }}>
-                            <Icon small>mode_edit</Icon>
+                            <Icon tiny>mode_edit</Icon>
                         </Button>
-                    </div>
-                    <div className="paddingAround">
+                    </span>
+                    <span className="paddingAround">
                         <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
-                            <Icon small>delete</Icon>
+                            <Icon tiny>delete</Icon>
                         </Button>
-                    </div>
+                    </span>
+                    <span className="paddingAround">
+                        <Button floating onClick={() => { this.duplicateClicked(this.props.element) }}>
+                            <Icon tiny>content_copy</Icon>
+                        </Button>
+                    </span>
                 </td>
             </tr>
         )

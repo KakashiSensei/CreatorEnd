@@ -54,16 +54,16 @@ export default class VideoRow extends Component {
                     {moment(this.props.element.updatedAt).fromNow()}
                 </td>
                 <td>
-                    <div className="paddingAround">
+                    <span className="paddingAround">
                         <Button floating onClick={() => { this.editClicked(this.props.element) }}>
                             <Icon small>mode_edit</Icon>
                         </Button>
-                    </div>
-                    <div className="paddingAround">
+                    </span>
+                    <span className="paddingAround">
                         <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
                             <Icon small>delete</Icon>
                         </Button>
-                    </div>
+                    </span>
                 </td>
             </tr>
         )
