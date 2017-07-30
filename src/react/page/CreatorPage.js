@@ -316,7 +316,6 @@ export default class HomePage extends Component {
         })
             .then(res => res.json())
             .then((data) => {
-                console.log(data);
                 this.id = data._id;
             })
     }
