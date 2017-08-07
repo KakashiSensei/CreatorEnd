@@ -204,7 +204,6 @@ export default class HomePage extends Component {
         let reader = new FileReader();
         reader.onload = (event) => {
             let data = event.target.result.replace("data:" + target.type + ";base64,", '');
-
             let postData = {};
             postData.data = data;
             postData.width = "800px";
@@ -212,7 +211,6 @@ export default class HomePage extends Component {
 
             Request.resizeImageRequest(postData)
                 .then((data) => {
-                    debugger;
                     this.setState({
                         introImage: data.location
                     })
