@@ -9,6 +9,7 @@ import ParseData from "wl-parser";
 import moment from "moment";
 import AceEditorComp from "../components/creatorComponent/AceEditorComp";
 import Request from "../../Requests";
+import Helper from "../../Helper";
 
 
 export default class HomePage extends Component {
@@ -61,21 +62,14 @@ export default class HomePage extends Component {
         this.setState({
             htmlWritten: template
         })
-        FB.init({
-            appId: config.appID,
-            xfbml: true,
-            version: 'v2.9',
-            status: true
-        });
-        FB.getLoginStatus((response) => {
-            if (response.status === 'connected') {
-                this.updateLoginDetails(response);
-            } else if (response.status === 'not_authorized') {
-                console.log("User is not authorised");
-            } else {
-                console.log("Unknown status");
-            }
-        });
+
+        Helper.getLoginStatus()
+            .then((response) => {
+                return this.updateLoginDetails(response);
+            })
+            .catch((err) => {
+                return new Error("Not logged in");
+            })
 
         // retrieve the question
         if (this.id) {
