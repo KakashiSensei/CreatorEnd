@@ -14,6 +14,8 @@ export default function PrivateRoute(wrappedComponent) {
                 .then((response) => {
                     if (response.status === "connected") {
                         this.setState({ authenticated: true })
+                    } else {
+                        this.setState({ authenticated: false })
                     }
                 })
                 .catch(() => {

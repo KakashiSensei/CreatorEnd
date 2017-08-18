@@ -14,19 +14,37 @@ export let lastRoute;
 
 export default class Routes extends Component {
     render() {
-        let PrivateComp = PrivateRoute(<Route exact path="/" component={HomePage} />);
-        let homePage = <PrivateComp />;
+        const PrivateComp = PrivateRoute(<Route exact path="/" component={HomePage} />);
+        const homePage = <PrivateComp />;
+
+        const QuizEditHOC = PrivateRoute(<Route exact path="/quizedit/:id" component={CreatorPage} />);
+        const quizEdit = <QuizEditHOC/>;
+
+        const VideoCreatorHOC = PrivateRoute(<Route exact path="/videoedit/:id" component={VideoCreatorPage} />);
+        const videoEdit = <VideoCreatorHOC />;
+
+        const NewQuizHOC = PrivateRoute(<Route exact path="/newquiz" component={CreatorPage} />);
+        const newQuiz = <NewQuizHOC />;
+
+        const NewVideoHOC = PrivateRoute(<Route exact path="/newvideo" component={VideoCreatorPage} />);
+        const newVideo = <NewVideoHOC />;
+
+        const QuizPageHOC = PrivateRoute(<Route exact path="/quiz" component={QuizPage} />);
+        const quizPage = <QuizPageHOC/>;
+
+        const VideoPageHOC = PrivateRoute(<Route exact path="/video" component={VideoPage} />);
+        const videoPage = <VideoPageHOC />;
+
         return (
             <Router history={history}>
                 <div>
-                    {homePage}
                     <Route exact path="/login" component={LoginPage} />
-                    <Route exact path="/quizedit/:id" component={CreatorPage} />
-                    <Route exact path="/videoedit/:id" component={VideoCreatorPage} />
-                    <Route exact path="/newquiz" component={CreatorPage} />
-                    <Route exact path="/newvideo" component={VideoCreatorPage} />
-                    <Route exact path="/quiz" component={QuizPage} />
-                    <Route exact path="/video" component={VideoPage} />
+                    {homePage}
+                    {quizEdit}
+                    {videoEdit}
+                    {newQuiz}
+                    {newVideo}
+                    {videoPage}
                 </div>
             </Router>
         )
