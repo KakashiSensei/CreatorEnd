@@ -7,52 +7,63 @@ import createHashHistory from 'history/createHashHistory';
 import QuizPage from "./react/page/QuizPage";
 import VideoPage from "./react/page/VideoPage";
 import LoginPage from "./react/page/LoginPage";
+import NavBar from "./react/components/NavBar";
 import PrivateRoute from "./PrivateRoute";
+import Helper from "./Helper";
+import * as Auth from "./Auth";
 
 export let history = createHashHistory();
 export let lastRoute;
 
 export default class Routes extends Component {
-    render() {
-        const PrivateComp = PrivateRoute(<Route exact path="/" component={HomePage} />);
-        const homePage = <PrivateComp />;
-
-        const QuizEditHOC = PrivateRoute(<Route exact path="/quizedit/:id" component={CreatorPage} />);
-        const quizEdit = <QuizEditHOC/>;
-
-        const VideoCreatorHOC = PrivateRoute(<Route exact path="/videoedit/:id" component={VideoCreatorPage} />);
-        const videoEdit = <VideoCreatorHOC />;
-
-        const NewQuizHOC = PrivateRoute(<Route exact path="/newquiz" component={CreatorPage} />);
-        const newQuiz = <NewQuizHOC />;
-
-        const NewVideoHOC = PrivateRoute(<Route exact path="/newvideo" component={VideoCreatorPage} />);
-        const newVideo = <NewVideoHOC />;
-
-        const QuizPageHOC = PrivateRoute(<Route exact path="/quiz" component={QuizPage} />);
-        const quizPage = <QuizPageHOC/>;
-
-        const VideoPageHOC = PrivateRoute(<Route exact path="/video" component={VideoPage} />);
-        const videoPage = <VideoPageHOC />;
-
-        return (
-            <Router history={history}>
-                <div>
-                    <Route exact path="/login" component={LoginPage} />
-                    {homePage}
-                    {quizEdit}
-                    {videoEdit}
-                    {newQuiz}
-                    {newVideo}
-                    {videoPage}
-                </div>
-            </Router>
-        )
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoggedIn: false,
+            checkOnce: false,
+        }
     }
 
-    logout(nextState, replace) {
-        FB.logout(function (response) {
-            debugger;
-        });
+    componentDidMount() {
+        // init facebook SDK only once
+        Helper.initFacebookSDK();
+
+        // get the facebook login status
+        Helper.getLoginStatus()
+            .then((response) => {
+                Auth.setAuthentication(true);
+                this.setState({
+                    isLoggedIn: true,
+                    checkOnce: true
+                });
+            })
+            .catch((message) => {
+                this.setState({ checkOnce: true })
+                console.log(message);
+            })
+    }
+
+    render() {
+        let routes = <Router history={history}>
+            <div>
+                <PrivateRoute exact path="/" component={HomePage} />
+                <PrivateRoute exact path="/quizedit/:id" component={CreatorPage} />
+                <PrivateRoute exact path="/videoedit/:id" component={VideoCreatorPage} />
+                <PrivateRoute exact path="/newquiz" component={CreatorPage} />
+                <PrivateRoute exact path="/newvideo" component={VideoCreatorPage} />
+                <PrivateRoute exact path="/quiz" component={QuizPage} />
+                <PrivateRoute exact path="/video" component={VideoPage} />
+                <Route exact path="/login" component={LoginPage} />
+            </div>
+        </Router>
+        if (this.state.checkOnce === false) {
+            routes = <div></div>
+        }
+
+        return (
+            <div>
+                {routes}
+            </div>
+        )
     }
 }

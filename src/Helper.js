@@ -12,14 +12,18 @@ exports.getSelectedContent = (data, n) => {
         .value();
 }
 
+exports.initFacebookSDK = () => {
+    FB.init({
+        appId: config.appID,
+        xfbml: true,
+        version: 'v2.9',
+        status: true,
+        cookie:true
+    });
+}
+
 exports.getLoginStatus = () => {
     return new Promise((resolve, reject) => {
-        FB.init({
-            appId: config.appID,
-            xfbml: true,
-            version: 'v2.9',
-            status: true
-        });
         FB.getLoginStatus((response) => {
             if (response.status === 'connected') {
                 return resolve(response);
@@ -30,5 +34,18 @@ exports.getLoginStatus = () => {
             }
         });
     })
+}
 
+exports.loginFacebook = () => {
+    return new Promise((resolve, reject) => {
+        FB.login((response) => {
+            if (response.status === 'connected') {
+                return resolve(response);
+            } else if (response.status === 'not_authorized') {
+                return reject(response);
+            } else {
+                return reject(response);
+            }
+        }, { scope: config.scope });
+    })
 }

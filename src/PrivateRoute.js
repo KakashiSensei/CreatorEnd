@@ -1,40 +1,22 @@
+import { Route, Redirect, } from 'react-router-dom';
+import * as Auth from "./Auth";
 import React, { Component } from "react";
-import { Route } from 'react-router-dom';
-import Helper from "./Helper";
-import LoginPage from "./react/page/LoginPage";
+import NavBar from "./react/components/NavBar";
 
-export default function PrivateRoute(wrappedComponent) {
-    return class checkFunc extends Component {
-        constructor(props) {
-            super(props);
-            this.state = {
-                authenticated: null
-            }
-            Helper.getLoginStatus()
-                .then((response) => {
-                    if (response.status === "connected") {
-                        this.setState({ authenticated: true })
-                    } else {
-                        this.setState({ authenticated: false })
-                    }
-                })
-                .catch(() => {
-                    this.setState({ authenticated: false })
-                })
-        }
-
-        render() {
-            let renderComp = <div></div>;
-            if (this.state.authenticated === true) {
-                renderComp = wrappedComponent
-            } else if (this.state.authenticated === false) {
-                renderComp = <LoginPage />
-            }
-            return (
-                <div>
-                    {renderComp}
-                </div>
+let PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route {...rest} render={props => (
+        Auth.isAuthenticated() ? (
+            <div>
+                <NavBar></NavBar>
+                <Component {...props} />
+            </div>
+        ) : (
+                <Redirect to={{
+                    pathname: '/login',
+                    state: { from: props.location }
+                }} />
             )
-        }
-    }
-}
+    )} />
+)
+
+export default PrivateRoute;

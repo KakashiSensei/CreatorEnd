@@ -49,7 +49,6 @@ export default class HomePage extends Component {
         this.onOutputEditorChange = this.onOutputEditorChange.bind(this);
         this.onFileUploaded = this.onFileUploaded.bind(this);
         this.onTextChange = this.onTextChange.bind(this);
-        this.onLoginClicked = this.onLoginClicked.bind(this);
         this.submitClicked = this.submitClicked.bind(this);
         this.onIntroImageAdded = this.onIntroImageAdded.bind(this);
         this.onIntroImageUploaded = this.onIntroImageUploaded.bind(this);
@@ -221,19 +220,6 @@ export default class HomePage extends Component {
         })
     }
 
-    onLoginClicked(e) {
-        FB.login((response) => {
-            if (response.status === 'connected') {
-                this.updateLoginDetails(response);
-            } else if (response.status === 'not_authorized') {
-                // the user is logged in to Facebook, 
-                // but has not authenticated your app
-            } else {
-                // the user isn't logged in to Facebook.
-            }
-        }, { scope: config.scope });
-    }
-
     updateLoginDetails(response) {
         var uid = response.authResponse.userID;
         var accessToken = response.authResponse.accessToken;
@@ -341,21 +327,9 @@ export default class HomePage extends Component {
 
         let iframeHTML = "<iframe src='" + encodedHTML + "' style='width:698px; height:367px'/>";
         let iframeOutputHTML = "<iframe src='" + encodedOutputHTML + "' style='width:100%; height:100px'/>";
-        let loginTag = <NavItem onClick={this.onLoginClicked}>login</NavItem>;
-        if (this.state.loggedIn) {
-            loginTag = <NavItem>
-                <img className="iconImageSize circle" src={this.profilePicture} />
-                <span className="basePadding">{this.firstName}</span>
-            </NavItem>
-        }
 
         return (
             <div>
-                <Row>
-                    <Navbar className="backgroundColor" brand='logo' right>
-                        {loginTag}
-                    </Navbar>
-                </Row>
                 <Row>
                     <Col s={6}>
                         <Row>

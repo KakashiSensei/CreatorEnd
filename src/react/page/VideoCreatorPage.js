@@ -4,6 +4,7 @@ import config from '../../config';
 import ParseData from "wl-parser";
 import YoutubeEmbedVideo from "youtube-embed-video";
 import { history } from '../../Routes';
+import Helper from '../../Helper';
 
 export default class VideoCreatorPage extends Component {
     firstName;
@@ -35,12 +36,7 @@ export default class VideoCreatorPage extends Component {
     }
 
     componentDidMount() {
-        FB.init({
-            appId: config.appID,
-            xfbml: true,
-            version: 'v2.9',
-            status: true
-        });
+        Helper
         FB.getLoginStatus((response) => {
             if (response.status === 'connected') {
                 this.updateLoginDetails(response);
@@ -157,14 +153,6 @@ export default class VideoCreatorPage extends Component {
             </Row>
         }
 
-        let loginTag = <NavItem onClick={this.onLoginClicked}>login</NavItem>;
-        if (this.state.loggedIn) {
-            loginTag = <NavItem>
-                <img className="iconImageSize circle" src={this.profilePicture} />
-                <span className="basePadding">{this.firstName}</span>
-            </NavItem>
-        }
-
         let videoPlayer = <div></div>;
         if (this.state.videoID.trim() !== "") {
             videoPlayer = <YoutubeEmbedVideo videoId={this.state.videoID} suggestions={false}></YoutubeEmbedVideo>
@@ -172,11 +160,6 @@ export default class VideoCreatorPage extends Component {
 
         return (
             <div>
-                <Row>
-                    <Navbar className="backgroundColor" brand='logo' right>
-                        {loginTag}
-                    </Navbar>
-                </Row>
                 <Row>
                     <Col s={6}>
                         <Input defaultValue={this.state.videoID} name="videoID" label="Video ID" s={6} onChange={this.onTextChange} />
