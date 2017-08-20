@@ -72,6 +72,8 @@ export default class NavBar extends Component {
         FB.logout((response) => {
             let location = "/login";
             history.push(location);
+            document.location.reload();
+            
         });
     }
 }
