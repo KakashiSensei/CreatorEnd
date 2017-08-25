@@ -11,6 +11,7 @@ import NavBar from "./react/components/NavBar";
 import PrivateRoute from "./PrivateRoute";
 import Helper from "./Helper";
 import * as Auth from "./Auth";
+import Requests from "./Requests";
 
 export let history = createHashHistory();
 export let lastRoute;
@@ -31,11 +32,22 @@ export default class Routes extends Component {
         // get the facebook login status
         Helper.getLoginStatus()
             .then((response) => {
-                Auth.setAuthentication(true);
-                this.setState({
-                    isLoggedIn: true,
-                    checkOnce: true
-                });
+                let accessToken = response.authResponse.accessToken;
+                Requests.getAccountDetails(accessToken).then((res) => {
+                    let accountData = {};
+                    accountData.name = res.name;
+                    accountData.email = res.email;
+                    accountData.facebookID = res.id;
+                    Requests.addLoginInformation(accountData).then((res) => {
+                        Auth.setAccessToken(accessToken);
+                        Auth.setAuthentication(true);
+                        Auth.setUserDetail(accountData);
+                        this.setState({
+                            isLoggedIn: true,
+                            checkOnce: true
+                        });
+                    })
+                })
             })
             .catch((message) => {
                 this.setState({ checkOnce: true })

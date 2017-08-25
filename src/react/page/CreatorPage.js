@@ -8,9 +8,9 @@ import { history, lastRoute } from '../../Routes';
 import ParseData from "wl-parser";
 import moment from "moment";
 import AceEditorComp from "../components/creatorComponent/AceEditorComp";
-import Request from "../../Requests";
+import Requests from "../../Requests";
 import Helper from "../../Helper";
-
+import * as Auth from '../../Auth';
 
 export default class HomePage extends Component {
     firstName;
@@ -72,9 +72,7 @@ export default class HomePage extends Component {
 
         // retrieve the question
         if (this.id) {
-            let url = config.restAPI + "/api/game/" + this.id;
-            fetch(url, { method: 'GET' })
-                .then(res => res.json())
+            Requests.getQuestions(this.id)
                 .then((data) => {
                     this.setState({
                         questionTitle: data.title,
@@ -113,7 +111,6 @@ export default class HomePage extends Component {
         this.setTimeOutId = setTimeout(() => {
             this.addQuestionInDataBase();
             this.lastTime = moment();
-            console.log("Question saved in DB");
         }, this.autoSaveTime * 1000);
     }
 
@@ -142,7 +139,7 @@ export default class HomePage extends Component {
 
 
 
-        Request.resizeImageRequest(postData)
+        Requests.resizeImageRequest(postData)
             .then(this.addImageToDisplay);
     }
 
@@ -162,7 +159,7 @@ export default class HomePage extends Component {
             postData.maxHeight = maxHeight;
             postData.type = fileName.substr(fileName.lastIndexOf('.') + 1);
 
-            Request.resizeImageRequest(postData)
+            Requests.resizeImageRequest(postData)
                 .then(this.addImageToDisplay);
         }
         reader.readAsDataURL(target);
@@ -182,7 +179,7 @@ export default class HomePage extends Component {
         bodydata.url = value;
         bodydata.width = "800px";
         bodydata.height = "425px";
-        Request.resizeImageRequest(bodydata)
+        Requests.resizeImageRequest(bodydata)
             .then((data) => {
                 this.setState({
                     introImage: data.location
@@ -202,7 +199,7 @@ export default class HomePage extends Component {
             postData.width = "800px";
             postData.height = "425px";
 
-            Request.resizeImageRequest(postData)
+            Requests.resizeImageRequest(postData)
                 .then((data) => {
                     this.setState({
                         introImage: data.location
@@ -235,16 +232,7 @@ export default class HomePage extends Component {
             let postData = {};
             postData.id = uid;
             postData.accessToken = accessToken;
-            let url = `${config.restAPI}/api/facebook`;
-            fetch(url, {
-                method: "POST",
-                body: JSON.stringify(postData),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-            })
-                .then(res => res.json())
+            return Requests.getFacebookData(postData)
                 .then((data) => {
                     this.facebookData = new ParseData(data, Date.now());
                     return this.facebookData.makeConnections().then(() => {
@@ -271,31 +259,26 @@ export default class HomePage extends Component {
         let outputText = this.state.outputText;
         let questionHTML = this.state.htmlWritten;
 
+        let userDetail = Auth.getUserDetail();
         let data = {};
         data["title"] = questionTitle;
         data["description"] = description;
         data["introImage"] = introImage;
         data["outputText"] = outputText;
         data["dom"] = questionHTML;
+        data["createdBy"] = userDetail.email;
 
-        let method = 'POST';
-        let url = config.restAPI + "/api/game";
         if (this.id) {
-            method = 'PUT';
-            url += "/" + this.id;
+            return Requests.updateNewQuestion(data, this.id)
+                .then((data) => {
+                    this.id = data._id;
+                })
+        } else {
+            return Requests.addNewQuiz(data)
+                .then((data) => {
+                    this.id = data._id;
+                })
         }
-        return fetch(url, {
-            method: method,
-            body: JSON.stringify(data),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        })
-            .then(res => res.json())
-            .then((data) => {
-                this.id = data._id;
-            })
     }
 
     render() {

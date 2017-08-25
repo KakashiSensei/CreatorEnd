@@ -26,9 +26,7 @@ export default class HomePage extends Component {
     }
 
     deleteQuizClicked(e) {
-        let url = config.restAPI + "/api/game/" + e._id;
-        fetch(url, { method: 'DELETE' })
-            .then(res => res.json())
+        Request.deleteVideo(e._id)
             .then((data) => {
                 this.componentDidMount();
             })

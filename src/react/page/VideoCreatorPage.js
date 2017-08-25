@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Input, Row, Col, Button, Navbar, NavItem, Preloader } from 'react-materialize';
-import config from '../../config';
 import ParseData from "wl-parser";
 import YoutubeEmbedVideo from "youtube-embed-video";
 import { history } from '../../Routes';
 import Helper from '../../Helper';
+import Requests from '../../Requests';
 
 export default class VideoCreatorPage extends Component {
     firstName;
@@ -36,22 +36,9 @@ export default class VideoCreatorPage extends Component {
     }
 
     componentDidMount() {
-        Helper
-        FB.getLoginStatus((response) => {
-            if (response.status === 'connected') {
-                this.updateLoginDetails(response);
-            } else if (response.status === 'not_authorized') {
-                console.log("User is not authorised");
-            } else {
-                console.log("Unknown status");
-            }
-        });
-
         // retrive the video data
         if (this.id) {
-            let url = config.restAPI + "/api/video/" + this.id;
-            fetch(url, { method: 'GET' })
-                .then(res => res.json())
+            Requests.getVideo(this.id)
                 .then((data) => {
                     this.setState({
                         videoID: data.videoID,
@@ -67,42 +54,6 @@ export default class VideoCreatorPage extends Component {
             let location = "/";
             history.push(location);
         }
-    }
-
-    updateLoginDetails(response) {
-        var uid = response.authResponse.userID;
-        var accessToken = response.authResponse.accessToken;
-        FB.api('me?fields=first_name,picture', (response) => {
-            this.firstName = response.first_name;
-            this.profilePicture = response.picture.data.url;
-            this.facebookID = uid;
-            this.accessToken = accessToken;
-            this.setState({
-                loggedIn: true
-            })
-
-            let postData = {};
-            postData.id = uid;
-            postData.accessToken = accessToken;
-            let url = `${config.restAPI}/api/facebook`;
-            fetch(url, {
-                method: "POST",
-                body: JSON.stringify(postData),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-            })
-                .then(res => res.json())
-                .then((data) => {
-                    this.facebookData = new ParseData(data, Date.now());
-                    return this.facebookData.makeConnections().then(() => {
-                        this.setState({
-                            dataRetrieved: true
-                        })
-                    })
-                })
-        });
     }
 
     onTextChange(e) {
@@ -124,24 +75,17 @@ export default class VideoCreatorPage extends Component {
         let data = {};
         data["videoID"] = videoID;
 
-        let method = 'POST';
-        let url = config.restAPI + "/api/video";
         if (this.id) {
-            method = 'PUT';
-            url += "/" + this.id;
+            return Requests.updateNewVideo(data, this.id)
+                .then((data) => {
+                    this.id = data._id;
+                })
+        } else {
+            return Requests.addNewVideo(data)
+                .then((data) => {
+                    this.id = data._id;
+                })
         }
-        return fetch(url, {
-            method: method,
-            body: JSON.stringify(data),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        })
-            .then(res => res.json())
-            .then((data) => {
-                this.id = data._id;
-            })
     }
 
     render() {

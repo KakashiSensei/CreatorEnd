@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import config from '../../config';
 import { Row, Col, Button, Table, tr, th, thead, tbody, Dropdown, NavItem } from 'react-materialize';
 import { Link } from 'react-router-dom';
 import { history } from '../../Routes';
@@ -41,18 +40,14 @@ export default class HomePage extends Component {
     }
 
     deleteQuizClicked(e) {
-        let url = config.restAPI + "/api/game/" + e._id;
-        fetch(url, { method: 'DELETE' })
-            .then(res => res.json())
+        Request.deleteQuiz(e._id)
             .then((data) => {
                 this.componentDidMount();
             })
     }
 
     deleteVideoClicked(e) {
-        let url = config.restAPI + "/api/video/" + e._id;
-        fetch(url, { method: 'DELETE' })
-            .then(res => res.json())
+        Request.deleteVideo(e._id)
             .then((data) => {
                 this.componentDidMount();
             })

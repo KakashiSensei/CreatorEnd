@@ -4,7 +4,6 @@ import { Row, Col, Button, Table, tr, th, thead, tbody, Dropdown, NavItem } from
 import VideoDisplayTable from "../components/VideoDisplayTable";
 import Helper from "../../Helper";
 import { Link } from 'react-router-dom';
-import config from '../../config';
 
 export default class VideoPage extends Component {
     constructor(props) {
@@ -26,9 +25,7 @@ export default class VideoPage extends Component {
     }
 
     deleteVideoClicked(e) {
-        let url = config.restAPI + "/api/video/" + e._id;
-        fetch(url, { method: 'DELETE' })
-            .then(res => res.json())
+        Request.deleteVideo(e._id)
             .then((data) => {
                 this.componentDidMount();
             })

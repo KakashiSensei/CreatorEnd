@@ -26,6 +26,7 @@ exports.getLoginStatus = () => {
     return new Promise((resolve, reject) => {
         FB.getLoginStatus((response) => {
             if (response.status === 'connected') {
+                console.log("document.cookie", document.cookie);
                 return resolve(response);
             } else if (response.status === 'not_authorized') {
                 return reject("User is not authorised");

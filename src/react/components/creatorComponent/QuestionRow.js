@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Icon, Button } from 'react-materialize';
 import moment from "moment";
-import {history} from "../../../Routes";
-import config from "../../../config";
+import { history } from "../../../Routes";
+import Requests from "../../../Requests";
 
 export default class QuestionRow extends Component {
     static propType = {
@@ -29,20 +29,9 @@ export default class QuestionRow extends Component {
         history.push(location);
     }
 
-    duplicateClicked(e){
+    duplicateClicked(e) {
         let data = this.props.element
-
-        let method = 'POST';
-        let url = config.restAPI + "/api/game";
-        return fetch(url, {
-            method: method,
-            body: JSON.stringify(data),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        })
-            .then(res => res.json())
+        Requests.addNewQuiz(data)
             .then((data) => {
                 let location = "/quizedit/" + data._id;
                 history.push(location);

@@ -31,7 +31,7 @@ export default class VideoRow extends Component {
 
     componentDidMount() {
         Requests.getVideoDetails(this.props.element.videoID)
-        .then((data)=>{
+        .then((data)=>{            
             this.setState({
                 title: data.items[0]["snippet"]["title"],
                 thumbnail: data.items[0]["snippet"]["thumbnails"]["medium"]["url"]
