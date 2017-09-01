@@ -19,8 +19,6 @@ export default class HomePage extends Component {
     accessToken;
     facebookData;
     id;
-    autoSaveTime = 10;
-    setTimeOutId;
 
     constructor(props) {
         super(props);
@@ -107,11 +105,11 @@ export default class HomePage extends Component {
             htmlWritten: e
         })
 
-        clearTimeout(this.setTimeOutId);
-        this.setTimeOutId = setTimeout(() => {
-            this.addQuestionInDataBase();
-            this.lastTime = moment();
-        }, this.autoSaveTime * 1000);
+        // clearTimeout(this.setTimeOutId);
+        // this.setTimeOutId = setTimeout(() => {
+        //     this.addQuestionInDataBase();
+        //     this.lastTime = moment();
+        // }, this.autoSaveTime * 1000);
     }
 
     onOutputEditorChange(e) {
@@ -119,12 +117,12 @@ export default class HomePage extends Component {
             outputText: e
         })
 
-        clearTimeout(this.setTimeOutId);
-        this.setTimeOutId = setTimeout(() => {
-            this.addQuestionInDataBase();
-            this.lastTime = moment();
-            console.log("Question saved in DB");
-        }, this.autoSaveTime * 1000);
+        // clearTimeout(this.setTimeOutId);
+        // this.setTimeOutId = setTimeout(() => {
+        //     this.addQuestionInDataBase();
+        //     this.lastTime = moment();
+        //     console.log("Question saved in DB");
+        // }, this.autoSaveTime * 1000);
     }
 
     onUploadFromURL(e) {
