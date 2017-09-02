@@ -28,6 +28,11 @@
     background-color: #26a69a;
 }
 
+.chip{
+    background-color: #4CAF50;
+    color: white;
+}
+
 .iconImageSize{
     height: 100%;
     vertical-align: middle;

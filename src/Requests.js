@@ -204,3 +204,19 @@ exports.getFacebookData = (postData) => {
     })
         .then(res => res.json())
 }
+
+exports.changeStatus = (postData) => {
+    let url = `${config.restAPI}/api/status`;
+    let headerObject = {};
+    addAccessKey(headerObject);
+    headerObject = _.assign(headerObject, {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    });
+    return fetch(url, {
+        method: "POST",
+        body: JSON.stringify(postData),
+        headers: headerObject
+    })
+        .then(res => res.json())
+}

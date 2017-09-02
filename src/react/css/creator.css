@@ -23,8 +23,17 @@ a{
     margin: 0px
 }
 
+.yellowColor, .yellowColor:hover{
+    background-color: #FFC107;
+}
+
+.yellowColor:focus{
+    background-color: #FF9800;
+}
+
 .paddingAround{
-    padding: 5px
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .circleCenter {

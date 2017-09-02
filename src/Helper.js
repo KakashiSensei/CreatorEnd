@@ -18,7 +18,7 @@ exports.initFacebookSDK = () => {
         xfbml: true,
         version: 'v2.9',
         status: true,
-        cookie:true
+        cookie: true
     });
 }
 
@@ -26,7 +26,6 @@ exports.getLoginStatus = () => {
     return new Promise((resolve, reject) => {
         FB.getLoginStatus((response) => {
             if (response.status === 'connected') {
-                console.log("document.cookie", document.cookie);
                 return resolve(response);
             } else if (response.status === 'not_authorized') {
                 return reject("User is not authorised");
@@ -49,4 +48,11 @@ exports.loginFacebook = () => {
             }
         }, { scope: config.scope });
     })
+}
+
+exports.status = {
+    DEVELOPING: "Developing",
+    IN_REVIEW: "In Review",
+    APPROVED: "Approved",
+    POSTED: "Posted"
 }

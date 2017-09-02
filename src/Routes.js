@@ -56,7 +56,7 @@ export default class Routes extends Component {
     }
 
     render() {
-        let routes = <Router history={history}>
+        let routes = <Router>
             <div>
                 <PrivateRoute exact path="/" component={HomePage} />
                 <PrivateRoute exact path="/quizedit/:id" component={CreatorPage} />

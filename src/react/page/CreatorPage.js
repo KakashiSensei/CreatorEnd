@@ -11,6 +11,8 @@ import AceEditorComp from "../components/creatorComponent/AceEditorComp";
 import Requests from "../../Requests";
 import Helper from "../../Helper";
 import * as Auth from '../../Auth';
+import defaultTemplate from "../../templates/quiz";
+const template = defaultTemplate.template;
 
 export default class HomePage extends Component {
     firstName;
@@ -55,7 +57,6 @@ export default class HomePage extends Component {
     }
 
     componentDidMount() {
-        let template = require("../../templates/quiz").template;
         this.setState({
             htmlWritten: template
         })
