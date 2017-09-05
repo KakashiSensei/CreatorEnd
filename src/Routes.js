@@ -32,6 +32,7 @@ export default class Routes extends Component {
         // get the facebook login status
         Helper.getLoginStatus()
             .then((response) => {
+                console.log("response", response);
                 let accessToken = response.authResponse.accessToken;
                 Requests.getAccountDetails(accessToken).then((res) => {
                     let accountData = {};
