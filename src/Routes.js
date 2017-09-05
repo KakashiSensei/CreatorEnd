@@ -39,6 +39,7 @@ export default class Routes extends Component {
                     accountData.email = res.email;
                     accountData.facebookID = res.id;
                     Requests.addLoginInformation(accountData).then((res) => {
+                        accountData.type = res.type;
                         Auth.setAccessToken(accessToken);
                         Auth.setAuthentication(true);
                         Auth.setUserDetail(accountData);

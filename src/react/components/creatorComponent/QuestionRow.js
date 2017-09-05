@@ -25,12 +25,13 @@ export default class QuestionRow extends Component {
     userDetail;
     constructor(props) {
         super(props);
+        this.userDetail = getUserDetail();
         this.state = {
             status: this.props.element.status
         }
         this.editClicked = this.editClicked.bind(this);
         this.changeStatus = this.changeStatus.bind(this);
-        this.userDetail = getUserDetail();
+        this.cancelStatus = this.cancelStatus.bind(this);
     }
 
     editClicked(e) {
@@ -48,57 +49,209 @@ export default class QuestionRow extends Component {
             })
     }
 
+    cancelStatus(e) {
+        postData = {
+            "status": status.DEVELOPING,
+            "id": this.props.element._id
+        };
+        Requests.changeStatus(postData).then((res) => {
+            this.setState({
+                status: status.DEVELOPING
+            })
+        })
+    }
+
     changeStatus(e) {
         let postData;
-        switch (this.state.status) {
-            case status.DEVELOPING:
-                postData = { "status": status.IN_REVIEW }
-                break;
-            // case status.IN_REVIEW:
-            //     postData = {"status": status.}
-            // break;
+        if (this.userDetail.type === "admin") {
+            switch (this.state.status) {
+                case status.DEVELOPING:
+                    postData = {
+                        "status": status.IN_REVIEW,
+                        "id": this.props.element._id
+                    }
+                    Requests.changeStatus(postData).then((res) => {
+                        this.setState({
+                            status: status.IN_REVIEW
+                        })
+                    })
+                    break;
+                case status.IN_REVIEW:
+                    postData = {
+                        "status": status.APPROVED,
+                        "id": this.props.element._id
+                    };
+                    Requests.changeStatus(postData).then((res) => {
+                        this.setState({
+                            status: status.APPROVED
+                        })
+                    })
+                    break;
+                    
+            }
+        } else if (this.userDetail.type === "developer") {
+            switch (this.state.status) {
+                case status.DEVELOPING:
+                    postData = {
+                        "status": status.IN_REVIEW,
+                        "id": this.props.element._id
+                    }
+                    Requests.changeStatus(postData).then((res) => {
+                        this.setState({
+                            status: status.IN_REVIEW
+                        })
+                    })
+                    break;
+                case status.IN_REVIEW:
+                    postData = {
+                        "status": status.DEVELOPING,
+                        "id": this.props.element._id
+                    };
+                    Requests.changeStatus(postData).then((res) => {
+                        this.setState({
+                            status: status.DEVELOPING
+                        })
+                    })
+                    break;
+            }
         }
-        Requests.changeStatus(postData);
     }
 
     render() {
         let statusElement;
-        switch (this.state.status) {
-            case status.DEVELOPING:
-                statusElement =
-                    <span className="paddingAround">
+        let deleteButton;
+        let editButton;
+        if (this.userDetail.type === "admin") {
+            switch (this.state.status) {
+                case status.DEVELOPING:
+                    statusElement =
+                        <span className="paddingAround">
+                            <Button waves='light' onClick={() => { this.changeStatus() }}>
+                                SUBMIT
+                                <Icon left tiny>arrow_forward</Icon>
+                            </Button>
+                        </span>;
+
+                    deleteButton =
+                        <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
+                            <Icon tiny>delete</Icon>
+                        </Button>;
+
+                    editButton =
+                        <Button floating onClick={() => { this.editClicked(this.props.element) }}>
+                            <Icon tiny>mode_edit</Icon>
+                        </Button>
+                    break;
+                case status.IN_REVIEW:
+                    statusElement =
+                        <span className="paddingAround">
+                            <Button className="yellowColor" waves='light' onClick={() => { this.changeStatus() }}>
+                                In Review
+                                <Icon left tiny onClick={() => { this.cancelStatus() }}>clear</Icon>
+                            </Button>
+                        </span>;
+
+                    deleteButton =
+                        <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
+                            <Icon tiny>delete</Icon>
+                        </Button>;
+
+                    editButton =
+                        <Button floating onClick={() => { this.editClicked(this.props.element) }}>
+                            <Icon tiny>mode_edit</Icon>
+                        </Button>
+                    break;
+                case status.APPROVED:
+                    statusElement =
                         <Button waves='light' onClick={() => { this.changeStatus() }}>
-                            SUBMIT
-                        <Icon left tiny>arrow_forward</Icon>
-                        </Button>
-                    </span>
-                break;
-            case status.IN_REVIEW:
-                statusElement =
-                    <span className="paddingAround">
-                        <Button className="yellowColor" waves='light' onClick={() => { this.changeStatus() }}>
-                            In Review
-                        <Icon left tiny>clear</Icon>
-                        </Button>
-                    </span>
-                break;
-            case status.APPROVED:
-                statusElement =
-                    <span>
-                        <Chip>
                             Approved
-		                </Chip>
-                    </span>
-                break;
-            case status.POSTED:
-                statusElement =
-                    <span>
-                        <Chip>
-                            Posted
-                        </Chip>
-                    </span>
-                break;
+                                <Icon left tiny>arrow_forward</Icon>
+                        </Button>
+                    deleteButton =
+                        <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
+                            <Icon tiny>delete</Icon>
+                        </Button>;
+
+                    editButton =
+                        <Button floating onClick={() => { this.editClicked(this.props.element) }}>
+                            <Icon tiny>mode_edit</Icon>
+                        </Button>;
+                    break;
+                case status.POSTED:
+                    statusElement =
+                        <span>
+                            <Chip>
+                                Posted
+                            </Chip>
+                        </span>;
+                    deleteButton = <div></div>;
+                    editButton = <div></div>;
+                    break;
+            }
+        } else if (this.userDetail.type === "developer") {
+            switch (this.state.status) {
+                case status.DEVELOPING:
+                    statusElement =
+                        <span className="paddingAround">
+                            <Button waves='light' onClick={() => { this.changeStatus() }}>
+                                SUBMIT
+                                <Icon left tiny>arrow_forward</Icon>
+                            </Button>
+                        </span>;
+
+                    deleteButton =
+                        <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
+                            <Icon tiny>delete</Icon>
+                        </Button>;
+
+                    editButton =
+                        <Button floating onClick={() => { this.editClicked(this.props.element) }}>
+                            <Icon tiny>mode_edit</Icon>
+                        </Button>;
+                    break;
+                case status.IN_REVIEW:
+                    statusElement =
+                        <span className="paddingAround">
+                            <Button className="yellowColor" waves='light' onClick={() => { this.changeStatus() }}>
+                                In Review
+                                <Icon left tiny>clear</Icon>
+                            </Button>
+                        </span>
+
+                    deleteButton =
+                        <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
+                            <Icon tiny>delete</Icon>
+                        </Button>;
+
+                    editButton =
+                        <div></div>;
+                    break;
+                case status.APPROVED:
+                    statusElement =
+                        <span>
+                            <Chip>
+                                Approved
+		                    </Chip>
+                        </span>
+                    deleteButton = <div></div>;
+                    editButton =
+                        <div></div>;
+                    break;
+                case status.POSTED:
+                    statusElement =
+                        <span>
+                            <Chip>
+                                Posted
+                            </Chip>
+                        </span>
+                    deleteButton = <div></div>;
+                    editButton =
+                        <div></div>;
+                    break;
+            }
         }
+
+
         return (
             <tr key={this.props.element._id}>
                 <td>
@@ -114,14 +267,10 @@ export default class QuestionRow extends Component {
                 </td>
                 <td>
                     <span className="paddingAround">
-                        <Button floating onClick={() => { this.editClicked(this.props.element) }}>
-                            <Icon tiny>mode_edit</Icon>
-                        </Button>
+                        {editButton}
                     </span>
                     <span className="paddingAround">
-                        <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
-                            <Icon tiny>delete</Icon>
-                        </Button>
+                        {deleteButton}
                     </span>
                     <span className="paddingAround">
                         <Button floating onClick={() => { this.duplicateClicked(this.props.element) }}>
