@@ -37,10 +37,7 @@ export default class LoginPage extends Component {
                         Auth.setAccessToken(accessToken);
                         Auth.setAuthentication(true);
                         Auth.setUserDetail(accountData);
-                        this.setState({
-                            isLoggedIn: true,
-                            checkOnce: true
-                        });
+                        this.setState({ loggedIn: true });
                     })
                 })
             })
