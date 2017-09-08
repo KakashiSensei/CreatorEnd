@@ -87,7 +87,7 @@ export default class QuestionRow extends Component {
                         })
                     })
                     break;
-                    
+
             }
         } else if (this.userDetail.type === "developer") {
             switch (this.state.status) {
@@ -184,8 +184,8 @@ export default class QuestionRow extends Component {
                                 Posted
                             </Chip>
                         </span>;
-                    deleteButton = <div></div>;
-                    editButton = <div></div>;
+                    deleteButton = <span></span>;
+                    editButton = <span></span>;
                     break;
             }
         } else if (this.userDetail.type === "developer") {
@@ -224,7 +224,7 @@ export default class QuestionRow extends Component {
                         </Button>;
 
                     editButton =
-                        <div></div>;
+                        <span></span>;
                     break;
                 case status.APPROVED:
                     statusElement =
@@ -233,9 +233,9 @@ export default class QuestionRow extends Component {
                                 Approved
 		                    </Chip>
                         </span>
-                    deleteButton = <div></div>;
+                    deleteButton = <span></span>;
                     editButton =
-                        <div></div>;
+                        <span></span>;
                     break;
                 case status.POSTED:
                     statusElement =
@@ -244,9 +244,9 @@ export default class QuestionRow extends Component {
                                 Posted
                             </Chip>
                         </span>
-                    deleteButton = <div></div>;
+                    deleteButton = <span></span>;
                     editButton =
-                        <div></div>;
+                        <span></span>;
                     break;
             }
         }
@@ -266,18 +266,20 @@ export default class QuestionRow extends Component {
                     {moment(this.props.element.updatedAt).fromNow()}
                 </td>
                 <td>
-                    <span className="paddingAround">
-                        {editButton}
-                    </span>
-                    <span className="paddingAround">
-                        {deleteButton}
-                    </span>
-                    <span className="paddingAround">
-                        <Button floating onClick={() => { this.duplicateClicked(this.props.element) }}>
-                            <Icon tiny>content_copy</Icon>
-                        </Button>
-                    </span>
-                    {statusElement}
+                    <div>
+                        <span className="paddingAround">
+                            {editButton}
+                        </span>
+                        <span className="paddingAround">
+                            {deleteButton}
+                        </span>
+                        <span className="paddingAround">
+                            <Button floating onClick={() => { this.duplicateClicked(this.props.element) }}>
+                                <Icon tiny>content_copy</Icon>
+                            </Button>
+                        </span>
+                        {statusElement}
+                    </div>
                 </td>
             </tr>
         )

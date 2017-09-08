@@ -24,7 +24,7 @@
     "react-materialize": "^1.0.10",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
-    "wl-parser": "^1.0.13",
+    "wl-parser": "^1.0.18",
     "youtube-embed-video": "^1.0.2"
   },
   "devDependencies": {
@@ -40,7 +40,7 @@
     "file-loader": "^0.11.2",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
-    "webpack": "^3.5.5",
+    "webpack": "^3.5.6",
     "webpack-dev-server": "^2.7.1"
   }
 }
