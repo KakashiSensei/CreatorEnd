@@ -4994,9 +4994,9 @@ window-size@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.1.0.tgz#5438cd2ea93b202efa3a19fe8887aee7c94f9c9d"
 
-wl-parser@^1.0.18:
-  version "1.0.18"
-  resolved "https://registry.yarnpkg.com/wl-parser/-/wl-parser-1.0.18.tgz#3e5ddca40e99e2fd0ca6f61648bea544a36d3bc9"
+wl-parser@^1.0.19:
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/wl-parser/-/wl-parser-1.0.19.tgz#b497d93e73d5d8c6618c9782508cd868357bed9e"
   dependencies:
     gender-detection "^0.0.5"
     isomorphic-fetch "^2.2.1"

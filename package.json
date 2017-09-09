@@ -24,7 +24,7 @@
     "react-materialize": "^1.0.10",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
-    "wl-parser": "^1.0.18",
+    "wl-parser": "^1.0.19",
     "youtube-embed-video": "^1.0.2"
   },
   "devDependencies": {
