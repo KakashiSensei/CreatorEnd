@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6", // compile to ES2015 (Babel will do the rest)
-    "module": "commonjs",
+    "module": "none",
     "allowSyntheticDefaultImports": true,
     "sourceMap": true, // make TypeScript generate sourcemaps
     "outDir": "dist", // output directory to build to (irrelevant because we use Webpack most of the time)

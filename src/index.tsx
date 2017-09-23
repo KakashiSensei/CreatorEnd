@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import * as ReactDOM from "react-dom";
 import Routes from "./Routes";
 
 import "materialize-css/dist/css/materialize.css";
@@ -8,5 +8,6 @@ import "./react/css/main.css";
 import "./react/css/creator.css";
 
 window.onload = () => {
+  debugger;
   ReactDOM.render(<Routes/>, document.getElementById('app'));
 };

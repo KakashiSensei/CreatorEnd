@@ -28,8 +28,18 @@ module.exports = {
         rules: [
             {
                 test: /\.tsx?$/,
-                loaders: ['babel-loader', 'ts-loader'],
-                include: path.resolve('src')
+                use: [
+                    {
+                        loader: "babel-loader",
+                        options: {
+                            presets: ["es2015", "react", "stage-2", "react-hmre"]
+                        }
+                    },
+                    {
+                        loader: "ts-loader"
+                    }
+                ],
+                include: path.resolve("src")
             },
             {
                 test: /\.css?$/,
