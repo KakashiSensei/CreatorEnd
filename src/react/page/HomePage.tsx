@@ -7,8 +7,18 @@ import Request from "../../Requests";
 import QuizDisplayTable from "../components/QuizDisplayTable";
 import VideoDisplayTable from "../components/VideoDisplayTable";
 import Helper from "../../Helper";
+import { IQuizData, IVideoData } from "../../Definition";
 
-export default class HomePage extends Component {
+interface IProps {
+    location: {};
+}
+
+interface IState {
+    quizDataReceived: IQuizData[];
+    videoDataReceived: IVideoData[];
+}
+
+export default class HomePage extends Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -24,7 +34,7 @@ export default class HomePage extends Component {
         //make get request for questions
         Request.getAllQuizQuestion()
             .then((data) => {
-                let sortedData = Helper.getSelectedContent(data, 3);
+                let sortedData: IQuizData[] = Helper.sortContent(data, 3) as IQuizData[];
                 this.setState({
                     quizDataReceived: sortedData
                 })
@@ -32,7 +42,7 @@ export default class HomePage extends Component {
 
         Request.getAllVideo()
             .then((data) => {
-                let sortedData = Helper.getSelectedContent(data, 3);
+                let sortedData: IVideoData[] = Helper.sortContent(data, 3) as IVideoData[];
                 this.setState({
                     videoDataReceived: sortedData
                 })

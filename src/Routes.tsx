@@ -10,14 +10,22 @@ import LoginPage from "./react/page/LoginPage";
 import NavBar from "./react/components/NavBar";
 import PrivateRoute from "./PrivateRoute";
 import Helper from "./Helper";
-import * as Auth from "./Auth";
+import Auth from "./Auth";
 import Requests from "./Requests";
+import { IUserDetail } from "./Definition";
 
 export let history = createHashHistory();
-export let lastRoute;
 
-export default class Routes extends Component {
-    constructor(props) {
+interface IProps {
+}
+
+interface IState {
+    isLoggedIn: boolean,
+    checkOnce: boolean,
+}
+
+export default class Routes extends Component<IProps, IState> {
+    constructor(props: IProps) {
         super(props);
         this.state = {
             isLoggedIn: false,
@@ -32,17 +40,21 @@ export default class Routes extends Component {
         // get the facebook login status
         Helper.getLoginStatus()
             .then((response) => {
-                console.log("response", response);
-                let accessToken = response.authResponse.accessToken;
+                let accessToken = (response as any)["authResponse"]["accessToken"];
                 Requests.getAccountDetails(accessToken).then((res) => {
-                    let accountData = {};
-                    accountData.name = res.name;
-                    accountData.email = res.email;
-                    accountData.facebookID = res.id;
-                    console.log("accountData", accountData);
-                    Requests.addLoginInformation(accountData).then((res) => {
-                        console.log("New Account added", res);
-                        accountData.type = res.type;
+                    let accountInfo = {
+                        name: res.name,
+                        email: res.email,
+                        facebookID: res.id
+                    }
+
+                    Requests.addLoginInformation(accountInfo as IUserDetail).then((res) => {
+                        let accountData: IUserDetail = {
+                            name: res.name,
+                            email: res.email,
+                            facebookID: res.id,
+                            type: res.type
+                        };
                         Auth.setAccessToken(accessToken);
                         Auth.setAuthentication(true);
                         Auth.setUserDetail(accountData);

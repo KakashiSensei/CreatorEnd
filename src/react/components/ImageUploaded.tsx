@@ -1,12 +1,14 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { Row, Col } from 'react-materialize';
 
-export default class ImageUploaded extends Component {
-    static propType = {
-        gameLink: PropTypes.arrayOf(PropTypes.string).isRequired
-    }
+interface IProps {
+    gameLink: string[];
+}
 
+interface IState {
+}
+
+export default class ImageUploaded extends Component<IProps, IState> {
     constructor(props) {
         super(props);
     }

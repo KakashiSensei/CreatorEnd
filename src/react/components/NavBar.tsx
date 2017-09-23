@@ -1,9 +1,21 @@
 import React, { Component } from "react";
 import { Navbar, NavItem, Dropdown, Link, Button } from 'react-materialize';
 import Helper from "../../Helper";
-import { history, lastRoute } from '../../Routes';
+import { history } from '../../Routes';
 
-export default class NavBar extends Component {
+interface IProps {
+}
+
+interface IState {
+    loggedIn: boolean;
+}
+
+export default class NavBar extends Component<IProps, IState> {
+    private firstName: string;
+    private profilePicture: string;
+    private facebookID: string;
+    private accessToken: string;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -21,13 +33,13 @@ export default class NavBar extends Component {
             })
     }
 
-    onLoginClicked(e) {
+    private onLoginClicked(e) {
         Helper.loginFacebook().then((response) => {
             return this.updateLoginDetails(response);
         })
     }
 
-    updateLoginDetails(response) {
+    private updateLoginDetails(response) {
         let uid = response.authResponse.userID;
         let accessToken = response.authResponse.accessToken;
         FB.api('me?fields=first_name,picture', (response) => {

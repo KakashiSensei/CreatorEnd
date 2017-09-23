@@ -1,14 +1,17 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { Row, Col, Button, Table, tr, th, thead, tbody, Dropdown, NavItem } from 'react-materialize';
 import QuestionRow from "../components/creatorComponent/QuestionRow";
+import { IQuizData } from "../../Definition";
 
-export default class QuizDisplayTable extends Component {
-    static propType = {
-        data: PropTypes.shape(),
-        deleteCallback: PropTypes.func
-    }
+interface IProps {
+    data: IQuizData[];
+    deleteCallback: Function;
+}
 
+interface IState {
+}
+
+export default class QuizDisplayTable extends Component<IProps, IState> {
     constructor(props) {
         super(props);
     }

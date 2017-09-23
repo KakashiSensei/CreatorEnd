@@ -4,28 +4,23 @@ import { Icon, Button, Chip } from 'react-materialize';
 import moment from "moment";
 import { history } from "../../../Routes";
 import Requests from "../../../Requests";
-import { status } from "../../../Helper";
-import { getUserDetail } from "../../../Auth";
+import Auth from "../../../Auth";
+import { IQuizData, IUserDetail, status } from "../../../Definition";
 
-export default class QuestionRow extends Component {
-    static propType = {
-        element: PropTypes.shape({
-            _id: PropTypes.number.isRequired,
-            title: PropTypes.string.isRequired,
-            description: PropTypes.string.isRequired,
-            introImage: PropTypes.string.isRequired,
-            dom: PropTypes.string.isRequired,
-            status: PropTypes.string,
-            createdBy: PropTypes.string
-        }).isRequired,
-        editCallback: PropTypes.func,
-        deleteCallback: PropTypes.func
-    }
+interface IProps {
+    element: IQuizData;
+    deleteCallback: Function;
+}
 
-    userDetail;
+interface IState {
+    status: status;
+}
+
+export default class QuestionRow extends Component<IProps, IState> {
+    private userDetail: IUserDetail;
     constructor(props) {
         super(props);
-        this.userDetail = getUserDetail();
+        this.userDetail = Auth.getUserDetail();
         this.state = {
             status: this.props.element.status
         }
@@ -49,8 +44,8 @@ export default class QuestionRow extends Component {
             })
     }
 
-    cancelStatus(e) {
-        postData = {
+    cancelStatus() {
+        let postData = {
             "status": status.DEVELOPING,
             "id": this.props.element._id
         };
@@ -61,7 +56,7 @@ export default class QuestionRow extends Component {
         })
     }
 
-    changeStatus(e) {
+    changeStatus() {
         let postData;
         if (this.userDetail.type === "admin") {
             switch (this.state.status) {

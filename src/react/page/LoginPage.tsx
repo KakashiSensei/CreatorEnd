@@ -3,10 +3,19 @@ import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
 import { Button } from 'react-materialize';
 import Helper from '../../Helper';
 import { history } from '../../Routes';
-import * as Auth from '../../Auth';
+import Auth from '../../Auth';
 import Requests from "../../Requests";
+import { IUserDetail } from "../../Definition";
 
-export default class LoginPage extends Component {
+interface IProps {
+
+}
+
+interface IState {
+    loggedIn: boolean;
+}
+
+export default class LoginPage extends Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -24,15 +33,15 @@ export default class LoginPage extends Component {
                 // Auth.setAccessToken(accessToken);
                 // this.setState({ loggedIn: true });
                 console.log("response", response);
-                let accessToken = response.authResponse.accessToken;
+                let accessToken = (response as any).authResponse.accessToken;
                 Requests.getAccountDetails(accessToken).then((res) => {
-                    let accountData = {};
-                    accountData.name = res.name;
-                    accountData.email = res.email;
-                    accountData.facebookID = res.id;
-                    console.log("accountData", accountData);
+                    let accountData: IUserDetail = {
+                        name: res.name,
+                        email: res.email,
+                        facebookID: res.id
+                    };
+
                     Requests.addLoginInformation(accountData).then((res) => {
-                        console.log("New Account added", res);
                         accountData.type = res.type;
                         Auth.setAccessToken(accessToken);
                         Auth.setAuthentication(true);
@@ -48,7 +57,7 @@ export default class LoginPage extends Component {
 
     render() {
         let domElement = <Button waves='light' onClick={this.onLoginClicked}>Login With Facebook</Button>;
-        let locationToRedirect = (this.props.location.state && this.props.location.state.from.pathname) || "/";
+        let locationToRedirect = ((this.props as any).location.state && (this.props as any).location.state.from.pathname) || "/";
         if (this.state.loggedIn) {
             domElement = <Redirect to={{
                 pathname: locationToRedirect

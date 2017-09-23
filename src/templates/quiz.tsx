@@ -22,4 +22,4 @@ let template = `<html>
 
 </html>`
 
-exports.template = template;
+export default template;

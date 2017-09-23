@@ -5,12 +5,21 @@ import YoutubeEmbedVideo from "youtube-embed-video";
 import { history } from '../../Routes';
 import Helper from '../../Helper';
 import Requests from '../../Requests';
+import {IVideoData} from "../../Definition";
 
-export default class VideoCreatorPage extends Component {
-    firstName;
-    profilePicture;
-    facebookID;
-    accessToken;
+interface IProps {
+}
+
+interface IState {
+    videoID: string;
+    videoRetrived: boolean;
+}
+
+export default class VideoCreatorPage extends Component<IProps, IState> {
+    firstName: string;
+    profilePicture: string;
+    facebookID: number;
+    accessToken: string;
     facebookData;
     id;
     autoSaveTime = 10;
@@ -18,21 +27,22 @@ export default class VideoCreatorPage extends Component {
 
     constructor(props) {
         super(props);
+
+        // update data with existing data
+        let pathname = (this.props as any).location.pathname;
+        this.id = pathname.split('/')[2];
+        let videoRetrivedFlag = true;
+        if (this.id) {
+            videoRetrivedFlag = false;
+        }
+
         this.state = {
             videoID: "",
-            videoRetrived: true
+            videoRetrived: videoRetrivedFlag
         }
 
         this.onTextChange = this.onTextChange.bind(this);
         this.submitClicked = this.submitClicked.bind(this);
-
-        // update data with existing data
-        let pathname = this.props.location.pathname;
-        this.id = pathname.split('/')[2];
-
-        if (this.id) {
-            this.state.videoRetrived = false;
-        }
     }
 
     componentDidMount() {
@@ -49,7 +59,7 @@ export default class VideoCreatorPage extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        var routeChanged = nextProps.location === this.props.location
+        var routeChanged = nextProps.location === (this.props as any).location;
         if (routeChanged) {
             let location = "/";
             history.push(location);
@@ -72,7 +82,10 @@ export default class VideoCreatorPage extends Component {
     addQuestionInDataBase() {
         //make post request for adding question
         let videoID = this.state.videoID;
-        let data = {};
+        let data: IVideoData = {
+            videoID: videoID,
+            
+        };
         data["videoID"] = videoID;
 
         if (this.id) {

@@ -1,30 +1,40 @@
 import React, { Component } from "react";
 import Request from "../../Requests";
 import { Row, Col, Button, Table, tr, th, thead, tbody, Dropdown, NavItem } from 'react-materialize';
-import VideoDisplayTable from "../components/VideoDisplayTable";
+import QuizDisplayTable from "../components/QuizDisplayTable";
 import Helper from "../../Helper";
 import { Link } from 'react-router-dom';
+import { IQuizData } from '../../Definition';
 
-export default class VideoPage extends Component {
+interface IProps {
+
+}
+
+interface IState {
+    quizDataReceived: IQuizData[];
+}
+
+export default class HomePage extends Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {
-            videoDataReceived: null
+            quizDataReceived: null
         }
-        this.deleteVideoClicked = this.deleteVideoClicked.bind(this);
+
+        this.deleteQuizClicked = this.deleteQuizClicked.bind(this);
     }
 
     componentDidMount() {
-        Request.getAllVideo()
+        Request.getAllQuizQuestion()
             .then((data) => {
-                let sortedData = Helper.getSelectedContent(data);
+                let sortedData: IQuizData[] = Helper.sortContent(data) as IQuizData[];
                 this.setState({
-                    videoDataReceived: sortedData
+                    quizDataReceived: sortedData
                 })
             })
     }
 
-    deleteVideoClicked(e) {
+    deleteQuizClicked(e) {
         Request.deleteVideo(e._id)
             .then((data) => {
                 this.componentDidMount();
@@ -35,18 +45,18 @@ export default class VideoPage extends Component {
         return (
             <div>
                 <div className="fixedPosition">
-                    <Link to='/newvideo'>
+                    <Link to='/newquiz'>
                         <Button floating large className='backgroundColor iconStyle' waves='light' icon='add' />
                     </Link>
                 </div>
                 <Row>
                     <Col s={5}>
-                        <h5>Video</h5>
+                        <h5>Quizes</h5>
                     </Col>
                 </Row>
                 <Row>
                     <Col s={10}>
-                        <VideoDisplayTable data={this.state.videoDataReceived} deleteCallback={this.deleteVideoClicked} />
+                        <QuizDisplayTable data={this.state.quizDataReceived} deleteCallback={this.deleteQuizClicked} />
                     </Col>
                 </Row>
             </div>

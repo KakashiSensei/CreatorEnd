@@ -1,19 +1,20 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { Icon, Button } from 'react-materialize';
 import moment from "moment";
 import Requests from "../../../Requests";
-import {history} from "../../../Routes";
+import { history } from "../../../Routes";
+import { IVideoData } from "../../../Definition";
 
-export default class VideoRow extends Component {
-    static propType = {
-        element: PropTypes.shape({
-            _id: PropTypes.number.isRequired,
-            videoID: PropTypes.string.isRequired
-        }).isRequired,
-        deleteCallback: PropTypes.func
-    }
+interface IProps {
+    element: IVideoData;
+    deleteCallback: Function;
+}
 
+interface IState {
+    title: string;
+    thumbnail: string;
+}
+export default class VideoRow extends Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -24,19 +25,19 @@ export default class VideoRow extends Component {
     }
 
     editClicked(e) {
-        let id = e._id;
+        let id: number = e._id;
         let location = "/videoedit/" + id;
         history.push(location);
     }
 
     componentDidMount() {
         Requests.getVideoDetails(this.props.element.videoID)
-        .then((data)=>{            
-            this.setState({
-                title: data.items[0]["snippet"]["title"],
-                thumbnail: data.items[0]["snippet"]["thumbnails"]["medium"]["url"]
+            .then((data) => {
+                this.setState({
+                    title: data.items[0]["snippet"]["title"],
+                    thumbnail: data.items[0]["snippet"]["thumbnails"]["medium"]["url"]
+                })
             })
-        })
     }
 
     render() {

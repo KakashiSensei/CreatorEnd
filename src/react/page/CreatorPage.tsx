@@ -4,26 +4,49 @@ import { Input, Row, Col, Button, Navbar, NavItem, Preloader } from 'react-mater
 import config from '../../config';
 import ImageUploaded from '../components/ImageUploaded';
 import { Encoder } from 'node-html-encoder';
-import { history, lastRoute } from '../../Routes';
-import ParseData from "wl-parser";
-import moment from "moment";
+import { history } from '../../Routes';
+import ParseData, { IFacebookData } from "wl-parser";
+import * as moment from "moment";
 import AceEditorComp from "../components/creatorComponent/AceEditorComp";
-import Requests from "../../Requests";
+import Requests, { IResizeImageRequestData, IFacebookRequestData } from "../../Requests";
 import Helper from "../../Helper";
-import * as Auth from '../../Auth';
-import defaultTemplate from "../../templates/quiz";
-const template = defaultTemplate.template;
+import Auth from '../../Auth';
+import template from "../../templates/quiz";
+import { IQuizData } from "../../Definition";
 
-export default class HomePage extends Component {
-    firstName;
-    profilePicture;
-    facebookID;
-    accessToken;
-    facebookData;
-    id;
+interface IProps {
+    location: {};
+}
+
+interface IState {
+    imageUploaded: string[];
+    htmlWritten: string;
+    questionTitle: string;
+    description: string;
+    introImage: string;
+    outputText: string;
+
+    questionRetrived: boolean;
+    loggedIn: boolean;
+    dataRetrieved: boolean;
+}
+
+export default class HomePage extends Component<IProps, IState> {
+    firstName: string;
+    profilePicture: string;
+    facebookID: number;
+    accessToken: string;
+    facebookData: ParseData;
+    id: string;
 
     constructor(props) {
         super(props);
+        let pathname = (this.props.location as any).pathname;
+        this.id = pathname.split('/')[2];
+        let questionRetrivedValue = true;
+        if (this.id) {
+            questionRetrivedValue = false;
+        }
         this.state = {
             imageUploaded: [],
             htmlWritten: "",
@@ -32,17 +55,9 @@ export default class HomePage extends Component {
             introImage: "",
             outputText: "",
 
-            questionRetrived: true,
+            questionRetrived: questionRetrivedValue,
             loggedIn: false,
             dataRetrieved: false
-        }
-
-        // update data with existing data
-        let pathname = this.props.location.pathname;
-        this.id = pathname.split('/')[2];
-
-        if (this.id) {
-            this.state.questionRetrived = false;
         }
 
         this.onEditorChange = this.onEditorChange.bind(this);
@@ -113,7 +128,7 @@ export default class HomePage extends Component {
         // }, this.autoSaveTime * 1000);
     }
 
-    onOutputEditorChange(e) {
+    onOutputEditorChange(e, event) {
         this.setState({
             outputText: e
         })
@@ -127,16 +142,15 @@ export default class HomePage extends Component {
     }
 
     onUploadFromURL(e) {
-        let target = e.currentTarget.value;
-        let postData = {};
+        let target: string = e.currentTarget.value;
         let maxWidth = "698px";
         let maxHeight = "367px";
-        postData.url = target;
-        postData.maxWidth = maxWidth;
-        postData.maxHeight = maxHeight;
-        postData.type = target.substr(target.lastIndexOf('.') + 1);
-
-
+        let postData: IResizeImageRequestData = {
+            url: target,
+            maxWidth: maxWidth,
+            maxHeight: maxHeight,
+            type: target.substr(target.lastIndexOf('.') + 1)
+        };
 
         Requests.resizeImageRequest(postData)
             .then(this.addImageToDisplay);
@@ -148,15 +162,16 @@ export default class HomePage extends Component {
 
         let reader = new FileReader();
         reader.onload = (event) => {
-            let data = event.target.result.replace("data:" + target.type + ";base64,", '');
+            let data = (event.target as any).result.replace("data:" + target.type + ";base64,", '');
             let maxWidth = "698px";
             let maxHeight = "367px";
 
-            let postData = {};
-            postData.data = data;
-            postData.maxWidth = maxWidth;
-            postData.maxHeight = maxHeight;
-            postData.type = fileName.substr(fileName.lastIndexOf('.') + 1);
+            let postData: IResizeImageRequestData = {
+                data: data,
+                maxWidth: maxWidth,
+                maxHeight: maxHeight,
+                type: fileName.substr(fileName.lastIndexOf('.') + 1)
+            };
 
             Requests.resizeImageRequest(postData)
                 .then(this.addImageToDisplay);
@@ -174,7 +189,9 @@ export default class HomePage extends Component {
 
         let url = config.restAPI + "/api/resizeImage";
 
-        let bodydata = {};
+        let bodydata: IResizeImageRequestData = {
+
+        };
         bodydata.url = value;
         bodydata.width = "800px";
         bodydata.height = "425px";
@@ -192,11 +209,12 @@ export default class HomePage extends Component {
 
         let reader = new FileReader();
         reader.onload = (event) => {
-            let data = event.target.result.replace("data:" + target.type + ";base64,", '');
-            let postData = {};
-            postData.data = data;
-            postData.width = "800px";
-            postData.height = "425px";
+            let data = (event.target as any).result.replace("data:" + target.type + ";base64,", '');
+            let postData: IResizeImageRequestData = {
+                data: data,
+                width: "800px",
+                height: "425px"
+            };
 
             Requests.resizeImageRequest(postData)
                 .then((data) => {
@@ -228,9 +246,11 @@ export default class HomePage extends Component {
                 loggedIn: true
             })
 
-            let postData = {};
-            postData.id = uid;
-            postData.accessToken = accessToken;
+            let postData: IFacebookRequestData = {
+                id: uid,
+                accessToken: accessToken
+            };
+
             return Requests.getFacebookData(postData)
                 .then((data) => {
                     this.facebookData = new ParseData(data, Date.now());
@@ -259,13 +279,15 @@ export default class HomePage extends Component {
         let questionHTML = this.state.htmlWritten;
 
         let userDetail = Auth.getUserDetail();
-        let data = {};
+        let data: IQuizData = {
+            title: questionTitle,
+            description: description,
+            introImage: introImage,
+            outputText: outputText,
+            dom: questionHTML,
+            createdBy: userDetail.email
+        };
         data["title"] = questionTitle;
-        data["description"] = description;
-        data["introImage"] = introImage;
-        data["outputText"] = outputText;
-        data["dom"] = questionHTML;
-        data["createdBy"] = userDetail.email;
 
         if (this.id) {
             return Requests.updateNewQuestion(data, this.id)
@@ -328,7 +350,7 @@ export default class HomePage extends Component {
                                 <input type="file" id="introFileSelected" ref="introFileSelected" style={{ display: "none", alignSelf: "flex-end" }} onChange={this.onIntroImageUploaded} />
                                 <Row className="flexDisplay">
                                     <Col s={4} className="flexCenter">
-                                        <span><Button waves='light' onClick={() => { return this.refs.introFileSelected.click() }}>Browse</Button></span>
+                                        <span><Button waves='light' onClick={() => { return (this.refs.introFileSelected as any).click() }}>Browse</Button></span>
                                     </Col>
                                     <Col s={1} className="flexCenter">
                                         OR
@@ -349,7 +371,7 @@ export default class HomePage extends Component {
                         <input type="file" id="selectedFile" ref="selectedFile" style={{ display: "none", alignSelf: "flex-end" }} onChange={this.onFileUploaded} />
                         <Row className="flexDisplay">
                             <Col s={4} className="flexCenter">
-                                <span><Button waves='light' onClick={() => { return this.refs.selectedFile.click() }}>Browse</Button></span>
+                                <span><Button waves='light' onClick={() => { return (this.refs.selectedFile as any).click() }}>Browse</Button></span>
                             </Col>
                             <Col s={1} className="flexCenter">
                                 OR

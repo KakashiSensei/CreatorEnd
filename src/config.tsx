@@ -4,4 +4,4 @@ let config = {
     scope: "public_profile,email,user_photos,user_posts,user_friends"
 }
 
-module.exports = config;
+export default config;

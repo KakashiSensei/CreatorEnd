@@ -2,14 +2,18 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-    entry: path.join(__dirname, "src", "index.js"),
+    entry: path.join(__dirname, "src", "index.tsx"),
     output: {
         path: path.join(__dirname, "dist"),
         filename: "bundle.js"
     },
     devtool: 'eval',
     resolve: {
-        extensions: ['.js', '.jsx', '.css', '.jpg', '.png']
+        // Look for modules in .ts(x) files first, then .js
+        extensions: ['.ts', '.tsx', '.js', '.css', '.jpg', '.png'],
+
+        // add 'src' to the modules, so that when you import files you can do so with 'src' as the relative route
+        modules: ['src', 'node_modules'],
     },
     stats: {
         colors: true,
@@ -23,12 +27,9 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.jsx?$/,
-                exclude: /node_modules/,
-                loader: "babel-loader",
-                options: {
-                    presets: ["es2015", "react", "stage-2", "react-hmre"]
-                }
+                test: /\.tsx?$/,
+                loaders: ['babel-loader', 'ts-loader'],
+                include: path.resolve('src')
             },
             {
                 test: /\.css?$/,
@@ -55,11 +56,13 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env': {
-                'NODE_ENV': JSON.stringify('development'),
-                'REST_API': JSON.stringify('http://localhost:3000'),
-                'APP_ID': JSON.stringify("1866917183572616")
+            'process': {
+                'env': {
+                    'NODE_ENV': JSON.stringify('development'),
+                    'REST_API': JSON.stringify('http://localhost:3000'),
+                    'APP_ID': JSON.stringify("1866917183572616")
+                }
             }
-        }),
+        })
     ]
 }

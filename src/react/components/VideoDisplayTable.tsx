@@ -1,14 +1,18 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { Row, Col, Button, Table, tr, th, thead, tbody, Dropdown, NavItem } from 'react-materialize';
 import VideoRow from "../components/creatorComponent/VideoRow";
+import { IVideoData } from "../../Definition";
 
-export default class VideoDisplayTable extends Component {
-    static propType = {
-        data: PropTypes.shape(),
-        deleteCallback: PropTypes.func
-    }
+interface IProps {
+    data: IVideoData[];
+    deleteCallback: Function;
+}
 
+interface IState {
+    title: string;
+    thumbnail: string;
+}
+export default class VideoDisplayTable extends Component<IProps, IState> {
     constructor(props) {
         super(props);
     }
