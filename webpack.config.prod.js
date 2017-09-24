@@ -75,7 +75,11 @@ module.exports = {
     },
     devtool: 'eval',
     resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.jpg', '.png']
+        // Look for modules in .ts(x) files first, then .js
+        extensions: ['.ts', '.tsx', '.js', '.css', '.jpg', '.png'],
+
+        // add 'src' to the modules, so that when you import files you can do so with 'src' as the relative route
+        modules: ['src', 'node_modules'],
     },
     stats: {
         colors: true,
@@ -90,8 +94,12 @@ module.exports = {
         rules: [
             {
                 test: /\.tsx?$/,
-                loaders: ['ts-loader'],
-                include: path.resolve('src')
+                use: [
+                    {
+                        loader: "ts-loader"
+                    }
+                ],
+                include: path.resolve("src")
             },
             {
                 test: /\.css?$/,
@@ -118,12 +126,10 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process': {
-                'env': {
-                    'NODE_ENV': JSON.stringify('development'),
-                    'REST_API': JSON.stringify('http://localhost:3000'),
-                    'APP_ID': JSON.stringify("1866917183572616")
-                }
+            'process.env': {
+                'NODE_ENV': JSON.stringify('production'),
+                'REST_API': JSON.stringify('https://white-light-rest-api.herokuapp.com'),
+                'APP_ID': JSON.stringify("399964337042548")
             }
         })
     ]

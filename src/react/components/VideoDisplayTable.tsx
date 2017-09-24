@@ -28,13 +28,13 @@ export default class VideoDisplayTable extends React.Component<IProps, IState> {
                             <th data-field="buttons"></th>
                         </tr>
                     </thead>
-                    {/* <tbody>
+                    <tbody>
                         {this.props.data && this.props.data.map((element, index) => {
                             return (
                                 <VideoRow deleteCallback={this.props.deleteCallback} element={element} key={element.updatedAt} />
                             )
                         })}
-                    </tbody> */}
+                    </tbody>
                 </Table>
             </div>
         )

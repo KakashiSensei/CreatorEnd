@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@types/es6-shim@^0.31.35":
+  version "0.31.35"
+  resolved "https://registry.yarnpkg.com/@types/es6-shim/-/es6-shim-0.31.35.tgz#d11920d8d4c938ad912c51e699ed7ba2505ba1eb"
+
 "@types/history@*":
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.6.0.tgz#093d67ed780d889c9543f6dca24ebee0b6b9fc45"
@@ -1898,6 +1902,10 @@ es6-set@~0.1.5:
     es6-iterator "~2.0.1"
     es6-symbol "3.1.1"
     event-emitter "~0.3.5"
+
+es6-shim@^0.35.3:
+  version "0.35.3"
+  resolved "https://registry.yarnpkg.com/es6-shim/-/es6-shim-0.35.3.tgz#9bfb7363feffff87a6cdb6cd93e405ec3c4b6f26"
 
 es6-symbol@3.1.1, es6-symbol@^3.1, es6-symbol@^3.1.1, es6-symbol@~3.1, es6-symbol@~3.1.1:
   version "3.1.1"

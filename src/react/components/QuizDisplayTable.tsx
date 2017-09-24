@@ -19,7 +19,7 @@ export default class QuizDisplayTable extends React.Component<IProps, IState> {
     render() {
         return (
             <div>
-                {/* <Table>
+                <Table>
                     <thead>
                         <tr>
                             <th data-field="title">Question</th>
@@ -34,7 +34,7 @@ export default class QuizDisplayTable extends React.Component<IProps, IState> {
                             )
                         })}
                     </tbody>
-                </Table> */}
+                </Table>
             </div>
         )
     }
