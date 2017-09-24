@@ -1,4 +1,4 @@
-import moment from "moment";
+import * as  moment from "moment";
 import config from './config';
 import * as _ from 'lodash';
 import { IQuizData } from './Definition';

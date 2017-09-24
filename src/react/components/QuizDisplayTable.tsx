@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { Row, Col, Button, Table, tr, th, thead, tbody, Dropdown, NavItem } from 'react-materialize';
 import QuestionRow from "../components/creatorComponent/QuestionRow";
 import { IQuizData } from "../../Definition";
@@ -11,7 +11,7 @@ interface IProps {
 interface IState {
 }
 
-export default class QuizDisplayTable extends Component<IProps, IState> {
+export default class QuizDisplayTable extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
     }
@@ -19,7 +19,7 @@ export default class QuizDisplayTable extends Component<IProps, IState> {
     render() {
         return (
             <div>
-                <Table>
+                {/* <Table>
                     <thead>
                         <tr>
                             <th data-field="title">Question</th>
@@ -34,7 +34,7 @@ export default class QuizDisplayTable extends Component<IProps, IState> {
                             )
                         })}
                     </tbody>
-                </Table>
+                </Table> */}
             </div>
         )
     }

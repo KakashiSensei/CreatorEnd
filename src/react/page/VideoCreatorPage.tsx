@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { Input, Row, Col, Button, Navbar, NavItem, Preloader } from 'react-materialize';
 import ParseData from "wl-parser";
 import YoutubeEmbedVideo from "youtube-embed-video";
@@ -15,7 +15,7 @@ interface IState {
     videoRetrived: boolean;
 }
 
-export default class VideoCreatorPage extends Component<IProps, IState> {
+export default class VideoCreatorPage extends React.Component<IProps, IState> {
     firstName: string;
     profilePicture: string;
     facebookID: number;
@@ -84,7 +84,7 @@ export default class VideoCreatorPage extends Component<IProps, IState> {
         let videoID = this.state.videoID;
         let data: IVideoData = {
             videoID: videoID,
-            
+
         };
         data["videoID"] = videoID;
 

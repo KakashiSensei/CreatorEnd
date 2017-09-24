@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { Row, Col, Button, Table, tr, th, thead, tbody, Dropdown, NavItem } from 'react-materialize';
 import { Link } from 'react-router-dom';
 import { history } from '../../Routes';
@@ -18,12 +18,12 @@ interface IState {
     videoDataReceived: IVideoData[];
 }
 
-export default class HomePage extends Component<IProps, IState> {
+export default class HomePage extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {
-            quizDataReceived: null,
-            videoDataReceived: null
+            quizDataReceived: [],
+            videoDataReceived: []
         };
 
         this.deleteQuizClicked = this.deleteQuizClicked.bind(this);

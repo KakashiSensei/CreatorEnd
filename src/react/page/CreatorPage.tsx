@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import brace from 'brace';
 import { Input, Row, Col, Button, Navbar, NavItem, Preloader } from 'react-materialize';
 import config from '../../config';
@@ -31,7 +31,7 @@ interface IState {
     dataRetrieved: boolean;
 }
 
-export default class HomePage extends Component<IProps, IState> {
+export default class HomePage extends React.Component<IProps, IState> {
     firstName: string;
     profilePicture: string;
     facebookID: number;

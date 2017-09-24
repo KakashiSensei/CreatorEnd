@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
 import { Button } from 'react-materialize';
 import Helper from '../../Helper';
@@ -15,7 +15,7 @@ interface IState {
     loggedIn: boolean;
 }
 
-export default class LoginPage extends Component<IProps, IState> {
+export default class LoginPage extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {

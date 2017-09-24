@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { HashRouter as Router, Route } from 'react-router-dom';
 import CreatorPage from './react/page/CreatorPage';
 import HomePage from './react/page/HomePage';
@@ -24,7 +24,7 @@ interface IState {
     checkOnce: boolean,
 }
 
-export default class Routes extends Component<IProps, IState> {
+export default class Routes extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {

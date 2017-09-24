@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import * as ReactDOM from "react-dom";
 import Routes from "./Routes";
 
@@ -8,6 +8,5 @@ import "./react/css/main.css";
 import "./react/css/creator.css";
 
 window.onload = () => {
-  debugger;
   ReactDOM.render(<Routes/>, document.getElementById('app'));
 };

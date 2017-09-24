@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { Row, Col } from 'react-materialize';
 
 interface IProps {
@@ -8,7 +8,7 @@ interface IProps {
 interface IState {
 }
 
-export default class ImageUploaded extends Component<IProps, IState> {
+export default class ImageUploaded extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
     }

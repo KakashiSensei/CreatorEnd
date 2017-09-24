@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import Request from "../../Requests";
 import { Row, Col, Button, Table, tr, th, thead, tbody, Dropdown, NavItem } from 'react-materialize';
 import VideoDisplayTable from "../components/VideoDisplayTable";
@@ -13,7 +13,7 @@ interface IState {
     videoDataReceived: IVideoData[]
 }
 
-export default class VideoPage extends Component<IProps, IState> {
+export default class VideoPage extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {

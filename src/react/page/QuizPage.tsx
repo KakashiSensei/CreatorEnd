@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import Request from "../../Requests";
 import { Row, Col, Button, Table, tr, th, thead, tbody, Dropdown, NavItem } from 'react-materialize';
 import QuizDisplayTable from "../components/QuizDisplayTable";
@@ -14,7 +14,7 @@ interface IState {
     quizDataReceived: IQuizData[];
 }
 
-export default class HomePage extends Component<IProps, IState> {
+export default class HomePage extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {

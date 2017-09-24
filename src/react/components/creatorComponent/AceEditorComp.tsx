@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import brace from 'brace';
 import AceEditor, { AceOptions } from 'react-ace';
 
@@ -18,7 +18,7 @@ interface IProps {
 interface IState {
 }
 
-export default class AceEditorComp extends Component<IProps, IState> {
+export default class AceEditorComp extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
     }

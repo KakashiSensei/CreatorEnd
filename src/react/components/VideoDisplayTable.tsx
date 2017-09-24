@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { Row, Col, Button, Table, tr, th, thead, tbody, Dropdown, NavItem } from 'react-materialize';
 import VideoRow from "../components/creatorComponent/VideoRow";
 import { IVideoData } from "../../Definition";
@@ -12,7 +12,7 @@ interface IState {
     title: string;
     thumbnail: string;
 }
-export default class VideoDisplayTable extends Component<IProps, IState> {
+export default class VideoDisplayTable extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
     }
@@ -28,13 +28,13 @@ export default class VideoDisplayTable extends Component<IProps, IState> {
                             <th data-field="buttons"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    {/* <tbody>
                         {this.props.data && this.props.data.map((element, index) => {
                             return (
                                 <VideoRow deleteCallback={this.props.deleteCallback} element={element} key={element.updatedAt} />
                             )
                         })}
-                    </tbody>
+                    </tbody> */}
                 </Table>
             </div>
         )

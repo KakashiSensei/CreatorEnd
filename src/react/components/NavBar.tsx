@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { Navbar, NavItem, Dropdown, Link, Button } from 'react-materialize';
 import Helper from "../../Helper";
 import { history } from '../../Routes';
@@ -10,7 +10,7 @@ interface IState {
     loggedIn: boolean;
 }
 
-export default class NavBar extends Component<IProps, IState> {
+export default class NavBar extends React.Component<IProps, IState> {
     private firstName: string;
     private profilePicture: string;
     private facebookID: string;

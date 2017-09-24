@@ -30,12 +30,6 @@ module.exports = {
                 test: /\.tsx?$/,
                 use: [
                     {
-                        loader: "babel-loader",
-                        options: {
-                            presets: ["es2015", "react", "stage-2", "react-hmre"]
-                        }
-                    },
-                    {
                         loader: "ts-loader"
                     }
                 ],

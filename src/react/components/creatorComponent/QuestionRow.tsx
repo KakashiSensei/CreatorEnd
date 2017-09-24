@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import * as React from "react";
 import PropTypes from "prop-types";
 import { Icon, Button, Chip } from 'react-materialize';
-import moment from "moment";
+import * as moment from "moment";
 import { history } from "../../../Routes";
 import Requests from "../../../Requests";
 import Auth from "../../../Auth";
@@ -16,7 +16,7 @@ interface IState {
     status: status;
 }
 
-export default class QuestionRow extends Component<IProps, IState> {
+export default class QuestionRow extends React.Component<IProps, IState> {
     private userDetail: IUserDetail;
     constructor(props) {
         super(props);

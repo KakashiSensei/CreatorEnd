@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { Icon, Button } from 'react-materialize';
-import moment from "moment";
+import * as moment from "moment";
 import Requests from "../../../Requests";
 import { history } from "../../../Routes";
 import { IVideoData } from "../../../Definition";
@@ -14,7 +14,7 @@ interface IState {
     title: string;
     thumbnail: string;
 }
-export default class VideoRow extends Component<IProps, IState> {
+export default class VideoRow extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {
