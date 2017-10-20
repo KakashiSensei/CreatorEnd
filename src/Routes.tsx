@@ -15,7 +15,7 @@ import Auth from "./Auth";
 import Requests from "./Requests";
 import { IUserDetail, IPageDetail } from "./Definition";
 import * as _ from "lodash";
-import PageList from "./react/components/pageList";
+import PageList from "./react/components/PageList";
 
 export let history = createHashHistory();
 
