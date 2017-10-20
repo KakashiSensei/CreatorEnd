@@ -23,6 +23,7 @@ interface IProps {
 }
 
 interface IState {
+    checkOnce: boolean,
     isLoggedIn: boolean,
     pageSelected: boolean,
     pageList: Array<IPageDetail>
@@ -33,6 +34,7 @@ export default class Routes extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
+            checkOnce: false,
             isLoggedIn: false,
             pageSelected: false,
             pageList: []
@@ -93,13 +95,14 @@ export default class Routes extends React.Component<IProps, IState> {
                         Auth.setAuthentication(true);
                         Auth.setUserDetail(accountData);
                         this.setState({
-                            isLoggedIn: true
+                            isLoggedIn: true,
+                            checkOnce: true,
                         });
                     })
                 })
             })
             .catch((message) => {
-                this.setState({ isLoggedIn: true })
+                this.setState({ checkOnce: true })
                 console.log(message);
             })
     }
@@ -118,12 +121,12 @@ export default class Routes extends React.Component<IProps, IState> {
                 <Route exact path="/login" component={LoginPage} />
             </div>
         </Router>
-        if (this.state.isLoggedIn === false) {
+        if (this.state.checkOnce === false) {
             routes = <div></div>
-        } else if (!this.state.pageSelected) {
+        } else if (!this.state.pageSelected && this.state.isLoggedIn) {
             routes = <PageList pageList={this.state.pageList} onPageSelect={this.onPageSelect}></PageList>
         }
-
+        
         return (
             <div>
                 {routes}
