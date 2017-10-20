@@ -190,11 +190,11 @@ export default class HomePage extends React.Component<IProps, IState> {
         let url = config.restAPI + "/api/resizeImage";
 
         let bodydata: IResizeImageRequestData = {
-
+            url: value,
+            width: "800px",
+            height: "425px"
         };
-        bodydata.url = value;
-        bodydata.width = "800px";
-        bodydata.height = "425px";
+
         Requests.resizeImageRequest(bodydata)
             .then((data) => {
                 this.setState({

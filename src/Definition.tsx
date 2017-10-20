@@ -15,6 +15,16 @@ export interface IVideoData {
     updatedAt?: number;
 }
 
+export interface IImagePostData {
+    _id?: number;
+    imageUrl: string;
+    createdBy: string;
+    status?: status;
+    postTime?: number;
+    createdAt?: number;
+    updatedAt?: number;
+}
+
 export interface IQuizData {
     _id?: number;
     title: string;
@@ -33,4 +43,12 @@ export interface IUserDetail {
     email: string;
     facebookID: number;
     type?: string;
+}
+
+export interface IPageDetail {
+    access_token: string,
+    category: string,
+    id: string,
+    name: string,
+    perms: Array<String>
 }

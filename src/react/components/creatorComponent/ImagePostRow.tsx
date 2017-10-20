@@ -1,59 +1,55 @@
 import * as React from "react";
-import PropTypes from "prop-types";
-import { Icon, Button, Chip } from 'react-materialize';
-import * as moment from "moment";
-import { history } from "../../../Routes";
-import Requests from "../../../Requests";
+import { IImagePostData, IUserDetail, status } from "../../../Definition";
+import { Icon, Button, Chip, Input, Row, Col } from 'react-materialize';
 import Auth from "../../../Auth";
-import { IQuizData, IUserDetail, status } from "../../../Definition";
+import Requests from "../../../Requests";
+import * as moment from "moment";
 
+interface facebookPostData {
+    id: String,
+    post_id: String
+}
 interface IProps {
-    element: IQuizData;
+    element: IImagePostData;
     deleteCallback: Function;
 }
 
 interface IState {
     status: status;
+    postsMsg
 }
 
-export default class QuestionRow extends React.Component<IProps, IState> {
+export default class ImagePostRow extends React.Component<IProps, IState>{
     private userDetail: IUserDetail;
     constructor(props) {
         super(props);
         this.userDetail = Auth.getUserDetail();
         this.state = {
-            status: this.props.element.status
+            status: this.props.element.status,
+            postsMsg: "Like us to get interesting posts!"
         }
-        this.editClicked = this.editClicked.bind(this);
         this.changeStatus = this.changeStatus.bind(this);
         this.cancelStatus = this.cancelStatus.bind(this);
-    }
-
-    editClicked(e) {
-        let id = e._id;
-        let location = "/quizedit/" + id;
-        history.push(location);
-    }
-
-    duplicateClicked(e) {
-        let data = this.props.element
-        Requests.addNewQuiz(data)
-            .then((data) => {
-                let location = "/quizedit/" + data._id;
-                history.push(location);
-            })
+        this.changePostMessgae = this.changePostMessgae.bind(this);
     }
 
     cancelStatus() {
         let postData = {
             "status": status.DEVELOPING,
             "id": this.props.element._id,
-            "type": "game"
+            "type": "postImage"
         };
         Requests.changeStatus(postData).then((res) => {
             this.setState({
                 status: status.DEVELOPING
             })
+        })
+    }
+
+    changePostMessgae(e) {
+        let newText = e.currentTarget.value;
+        this.setState({
+            postsMsg: newText
         })
     }
 
@@ -65,7 +61,7 @@ export default class QuestionRow extends React.Component<IProps, IState> {
                     postData = {
                         "status": status.IN_REVIEW,
                         "id": this.props.element._id,
-                        "type": "game"
+                        "type": "postImage"
                     }
                     Requests.changeStatus(postData).then((res) => {
                         this.setState({
@@ -77,7 +73,7 @@ export default class QuestionRow extends React.Component<IProps, IState> {
                     postData = {
                         "status": status.APPROVED,
                         "id": this.props.element._id,
-                        "type": "game"
+                        "type": "postImage"
                     };
                     Requests.changeStatus(postData).then((res) => {
                         this.setState({
@@ -86,6 +82,41 @@ export default class QuestionRow extends React.Component<IProps, IState> {
                     })
                     break;
 
+                case status.APPROVED:
+                    Requests.getLatestPostTime()
+                        .then((data: IImagePostData) => {
+                            let postTime = 0;
+                            if (data.postTime) {
+                                let momentLastTime: moment.Moment = moment.unix(data.postTime);
+                                momentLastTime.add(3, 'h').toDate();
+                                postTime = momentLastTime.unix();
+                            }
+                            let dateNow = moment();
+                            dateNow.add(3, 'h').toDate();
+                            let maxTime: number = Math.max(postTime, dateNow.unix());
+                            let imageObject = {
+                                url: this.props.element.imageUrl,
+                                caption: this.state.postsMsg,
+                                published: false,
+                                scheduled_publish_time: dateNow.unix()
+                            };
+                            Requests.postOnFacebook(imageObject, Auth.getPageAccessToken())
+                                .then((facebookData: facebookPostData) => {
+                                    postData = {
+                                        "status": status.POSTED,
+                                        "id": this.props.element._id,
+                                        "type": "postImage",
+                                        "photoID": facebookData.id,
+                                        "postID": facebookData.post_id,
+                                        "postTime": maxTime
+                                    };
+                                    Requests.changeStatus(postData).then((res) => {
+                                        this.setState({
+                                            status: status.POSTED
+                                        })
+                                    })
+                                })
+                        })
             }
         } else if (this.userDetail.type === "developer") {
             switch (this.state.status) {
@@ -93,7 +124,7 @@ export default class QuestionRow extends React.Component<IProps, IState> {
                     postData = {
                         "status": status.IN_REVIEW,
                         "id": this.props.element._id,
-                        "type": "game"
+                        "type": "postImage"
                     }
                     Requests.changeStatus(postData).then((res) => {
                         this.setState({
@@ -105,7 +136,7 @@ export default class QuestionRow extends React.Component<IProps, IState> {
                     postData = {
                         "status": status.DEVELOPING,
                         "id": this.props.element._id,
-                        "type": "game"
+                        "type": "postImage"
                     };
                     Requests.changeStatus(postData).then((res) => {
                         this.setState({
@@ -120,7 +151,7 @@ export default class QuestionRow extends React.Component<IProps, IState> {
     render() {
         let statusElement;
         let deleteButton;
-        let editButton;
+        let caption = <div></div>;
         if (this.userDetail.type === "admin") {
             switch (this.state.status) {
                 case status.DEVELOPING:
@@ -136,11 +167,6 @@ export default class QuestionRow extends React.Component<IProps, IState> {
                         <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
                             <Icon tiny>delete</Icon>
                         </Button>;
-
-                    editButton =
-                        <Button floating onClick={() => { this.editClicked(this.props.element) }}>
-                            <Icon tiny>mode_edit</Icon>
-                        </Button>
                     break;
                 case status.IN_REVIEW:
                     statusElement =
@@ -155,11 +181,6 @@ export default class QuestionRow extends React.Component<IProps, IState> {
                         <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
                             <Icon tiny>delete</Icon>
                         </Button>;
-
-                    editButton =
-                        <Button floating onClick={() => { this.editClicked(this.props.element) }}>
-                            <Icon tiny>mode_edit</Icon>
-                        </Button>
                     break;
                 case status.APPROVED:
                     statusElement =
@@ -171,11 +192,7 @@ export default class QuestionRow extends React.Component<IProps, IState> {
                         <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
                             <Icon tiny>delete</Icon>
                         </Button>;
-
-                    editButton =
-                        <Button floating onClick={() => { this.editClicked(this.props.element) }}>
-                            <Icon tiny>mode_edit</Icon>
-                        </Button>;
+                    caption = <input style={{ width: '300px', marginLeft: '10px' }} type="text" value={this.state.postsMsg} onChange={this.changePostMessgae} />
                     break;
                 case status.POSTED:
                     statusElement =
@@ -184,8 +201,9 @@ export default class QuestionRow extends React.Component<IProps, IState> {
                                 Posted
                             </Chip>
                         </span>;
-                    deleteButton = <span></span>;
-                    editButton = <span></span>;
+                    deleteButton = <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
+                        <Icon tiny>delete</Icon>
+                    </Button>;
                     break;
             }
         } else if (this.userDetail.type === "developer") {
@@ -202,11 +220,6 @@ export default class QuestionRow extends React.Component<IProps, IState> {
                     deleteButton =
                         <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
                             <Icon tiny>delete</Icon>
-                        </Button>;
-
-                    editButton =
-                        <Button floating onClick={() => { this.editClicked(this.props.element) }}>
-                            <Icon tiny>mode_edit</Icon>
                         </Button>;
                     break;
                 case status.IN_REVIEW:
@@ -222,9 +235,6 @@ export default class QuestionRow extends React.Component<IProps, IState> {
                         <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
                             <Icon tiny>delete</Icon>
                         </Button>;
-
-                    editButton =
-                        <span></span>;
                     break;
                 case status.APPROVED:
                     statusElement =
@@ -234,8 +244,6 @@ export default class QuestionRow extends React.Component<IProps, IState> {
 		                    </Chip>
                         </span>
                     deleteButton = <span></span>;
-                    editButton =
-                        <span></span>;
                     break;
                 case status.POSTED:
                     statusElement =
@@ -245,21 +253,14 @@ export default class QuestionRow extends React.Component<IProps, IState> {
                             </Chip>
                         </span>
                     deleteButton = <span></span>;
-                    editButton =
-                        <span></span>;
                     break;
             }
         }
-
-
         return (
             <tr key={this.props.element._id}>
                 <td>
                     <div>
-                        <img className="imageSize" src={this.props.element.introImage} />
-                        <p className="textBox">
-                            {this.props.element.title}
-                        </p>
+                        <img className="imageSize" src={this.props.element.imageUrl} />
                     </div>
                 </td>
                 <td>
@@ -268,17 +269,14 @@ export default class QuestionRow extends React.Component<IProps, IState> {
                 <td>
                     <div>
                         <span className="paddingAround">
-                            {editButton}
-                        </span>
-                        <span className="paddingAround">
                             {deleteButton}
                         </span>
-                        <span className="paddingAround">
-                            <Button floating onClick={() => { this.duplicateClicked(this.props.element) }}>
-                                <Icon tiny>content_copy</Icon>
-                            </Button>
+                        <span>
+                            {statusElement}
                         </span>
-                        {statusElement}
+                        <span>
+                            {caption}
+                        </span>
                     </div>
                 </td>
             </tr>

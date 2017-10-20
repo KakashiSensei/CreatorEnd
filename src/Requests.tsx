@@ -1,7 +1,7 @@
 import config from "./config";
 import Auth from "./Auth";
 import * as _ from "lodash";
-import { IUserDetail, IQuizData, IVideoData } from "./Definition";
+import { IUserDetail, IQuizData, IVideoData, IImagePostData } from "./Definition";
 
 export interface IHeaderObject {
     Authorization: string;
@@ -16,9 +16,10 @@ export interface IResizeImageRequestData {
     width?: string;
     height?: string;
     type?: string;
+    facebookPost?: boolean;
 }
 
-export interface IFacebookRequestData{
+export interface IFacebookRequestData {
     id: number;
     accessToken: string;
 }
@@ -37,25 +38,6 @@ namespace Requests {
         return fetch(url, {
             method: 'GET',
             headers: headerObject
-        })
-            .then(res => res.json())
-    }
-
-    export function getAllVideo() {
-        let url = config.restAPI + "/api/video";
-        let headerObject = {};
-        addAccessKey(headerObject as IHeaderObject);
-        return fetch(url, {
-            method: 'GET',
-            headers: headerObject
-        })
-            .then(res => res.json())
-    }
-
-    export function getVideoDetails(videoID: string) {
-        let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoID}&key=AIzaSyB7Zk1X9GB5MdxnRSxVWmdv3MwSbHU9RHA`;
-        return fetch(url, {
-            method: 'GET'
         })
             .then(res => res.json())
     }
@@ -146,17 +128,6 @@ namespace Requests {
             .then(res => res.json())
     }
 
-    export function deleteVideo(questionID: string) {
-        let url = config.restAPI + "/api/video/" + questionID;
-        let headerObject = {};
-        addAccessKey(headerObject as IHeaderObject);
-        return fetch(url, {
-            method: 'DELETE',
-            headers: headerObject
-        })
-            .then(res => res.json());
-    }
-
     export function deleteQuiz(questionID: string) {
         let url = config.restAPI + "/api/game/" + questionID;
         let headerObject = {};
@@ -164,6 +135,25 @@ namespace Requests {
         return fetch(url, {
             method: 'DELETE',
             headers: headerObject
+        })
+            .then(res => res.json())
+    }
+
+    export function getAllVideo() {
+        let url = config.restAPI + "/api/video";
+        let headerObject = {};
+        addAccessKey(headerObject as IHeaderObject);
+        return fetch(url, {
+            method: 'GET',
+            headers: headerObject
+        })
+            .then(res => res.json())
+    }
+
+    export function getVideoDetails(videoID: string) {
+        let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoID}&key=AIzaSyB7Zk1X9GB5MdxnRSxVWmdv3MwSbHU9RHA`;
+        return fetch(url, {
+            method: 'GET'
         })
             .then(res => res.json())
     }
@@ -211,6 +201,55 @@ namespace Requests {
             .then(res => res.json())
     }
 
+    export function deleteVideo(questionID: string) {
+        let url = config.restAPI + "/api/video/" + questionID;
+        let headerObject = {};
+        addAccessKey(headerObject as IHeaderObject);
+        return fetch(url, {
+            method: 'DELETE',
+            headers: headerObject
+        })
+            .then(res => res.json());
+    }
+
+    export function addNewImage(data: IImagePostData) {
+        let url = config.restAPI + "/api/postImage";
+        let headerObject = {};
+        addAccessKey(headerObject as IHeaderObject);
+        headerObject = _.assign(headerObject, {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        });
+        return fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: headerObject
+        })
+            .then(res => res.json())
+    }
+
+    export function getImagePost() {
+        let url = config.restAPI + "/api/postImage";
+        let headerObject = {};
+        addAccessKey(headerObject as IHeaderObject);
+        return fetch(url, {
+            method: 'GET',
+            headers: headerObject
+        })
+            .then(res => res.json())
+    }
+
+    export function deleteImage(imageID: string) {
+        let url = config.restAPI + "/api/postImage/" + imageID;
+        let headerObject = {};
+        addAccessKey(headerObject as IHeaderObject);
+        return fetch(url, {
+            method: 'DELETE',
+            headers: headerObject
+        })
+            .then(res => res.json());
+    }
+
     export function getFacebookData(postData) {
         let url = `${config.restAPI}/api/facebook`;
         let headerObject = {};
@@ -238,6 +277,44 @@ namespace Requests {
         return fetch(url, {
             method: "POST",
             body: JSON.stringify(postData),
+            headers: headerObject
+        })
+            .then(res => res.json())
+    }
+
+    export function pageList(accessToken: string) {
+        let url = "https://graph.facebook.com/me/accounts?access_token=" + accessToken;
+        let headerObject = {};
+        addAccessKey(headerObject as IHeaderObject);
+        return fetch(url, {
+            method: 'GET',
+            headers: headerObject
+        })
+            .then(res => res.json())
+    }
+
+    export function postOnFacebook(postData, accessToken: string): Promise<{}> {
+        let url = "https://graph.facebook.com/me/photos?access_token=" + accessToken;
+        let headerObject = {};
+        addAccessKey(headerObject as IHeaderObject);
+        headerObject = _.assign(headerObject, {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        });
+        return fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(postData),
+            headers: headerObject
+        })
+            .then(res => res.json())
+    }
+
+    export function getLatestPostTime(): Promise<{}> {
+        let url = `${config.restAPI}/api/postImage/lastTime`;
+        let headerObject = {};
+        addAccessKey(headerObject as IHeaderObject);
+        return fetch(url, {
+            method: 'GET',
             headers: headerObject
         })
             .then(res => res.json())

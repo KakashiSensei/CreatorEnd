@@ -6,8 +6,9 @@ import * as _ from "lodash";
 import Request from "../../Requests";
 import QuizDisplayTable from "../components/QuizDisplayTable";
 import VideoDisplayTable from "../components/VideoDisplayTable";
+import ImageDisplayTable from "../components/ImageDisplayTable";
 import Helper from "../../Helper";
-import { IQuizData, IVideoData } from "../../Definition";
+import { IQuizData, IVideoData, IImagePostData } from "../../Definition";
 
 interface IProps {
     location: {};
@@ -16,6 +17,7 @@ interface IProps {
 interface IState {
     quizDataReceived: IQuizData[];
     videoDataReceived: IVideoData[];
+    imagePostDataReceived: IImagePostData[];
 }
 
 export default class HomePage extends React.Component<IProps, IState> {
@@ -23,11 +25,13 @@ export default class HomePage extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             quizDataReceived: [],
-            videoDataReceived: []
+            videoDataReceived: [],
+            imagePostDataReceived: []
         };
 
         this.deleteQuizClicked = this.deleteQuizClicked.bind(this);
         this.deleteVideoClicked = this.deleteVideoClicked.bind(this);
+        this.deleteImagePostClicked = this.deleteImagePostClicked.bind(this);
     }
 
     componentDidMount() {
@@ -47,6 +51,14 @@ export default class HomePage extends React.Component<IProps, IState> {
                     videoDataReceived: sortedData
                 })
             })
+
+        Request.getImagePost()
+            .then((data) => {
+                let sortedData: IImagePostData[] = Helper.sortContent(data, 3) as IImagePostData[];
+                this.setState({
+                    imagePostDataReceived: sortedData
+                })
+            })
     }
 
     deleteQuizClicked(e) {
@@ -63,6 +75,13 @@ export default class HomePage extends React.Component<IProps, IState> {
             })
     }
 
+    deleteImagePostClicked(e){
+        Request.deleteImage(e._id)
+        .then((data) => {
+            this.componentDidMount();
+        })
+    }
+
     render() {
         return (
             <div>
@@ -76,6 +95,9 @@ export default class HomePage extends React.Component<IProps, IState> {
                         </li>
                         <li>
                             <Link to='/newvideo'>Video</Link>
+                        </li>
+                        <li>
+                            <Link to='/newimage'>Image</Link>
                         </li>
                     </Dropdown>
 
@@ -111,6 +133,22 @@ export default class HomePage extends React.Component<IProps, IState> {
                     <Row>
                         <Col s={9} className="alignRight">
                             <Link to="/video">more...</Link>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col s={5}>
+                            <h5>Image Posts</h5>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col s={10}>
+                            <ImageDisplayTable data={this.state.imagePostDataReceived} deleteCallback={this.deleteImagePostClicked} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col s={9} className="alignRight">
+                            <Link to="/newimage">more...</Link>
                         </Col>
                     </Row>
                 </div>

@@ -81,6 +81,7 @@ export default class NavBar extends React.Component<IProps, IState> {
     }
 
     onLogoutClicked(e) {
+        debugger;
         FB.logout((response) => {
             document.location.replace('/#/login');
         });
