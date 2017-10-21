@@ -6,6 +6,7 @@ import VideoCreatorPage from './react/page/VideoCreatorPage';
 import createHashHistory from 'history/createHashHistory';
 import QuizPage from "./react/page/QuizPage";
 import VideoPage from "./react/page/VideoPage";
+import ImageCreatorPage from "./react/page/ImageCreatorPage";
 import ImagePage from "./react/page/ImagePage";
 import LoginPage from "./react/page/LoginPage";
 import NavBar from "./react/components/NavBar";
@@ -117,7 +118,8 @@ export default class Routes extends React.Component<IProps, IState> {
                 <PrivateRoute exact path="/newvideo" component={VideoCreatorPage} />
                 <PrivateRoute exact path="/quiz" component={QuizPage} />
                 <PrivateRoute exact path="/video" component={VideoPage} />
-                <PrivateRoute exact path="/newimage" component={ImagePage} />
+                <PrivateRoute exact path="/newimage" component={ImageCreatorPage} />
+                <PrivateRoute exact path="/image" component={ImagePage} />
                 <Route exact path="/login" component={LoginPage} />
             </div>
         </Router>
@@ -126,7 +128,7 @@ export default class Routes extends React.Component<IProps, IState> {
         } else if (!this.state.pageSelected && this.state.isLoggedIn) {
             routes = <PageList pageList={this.state.pageList} onPageSelect={this.onPageSelect}></PageList>
         }
-        
+
         return (
             <div>
                 {routes}

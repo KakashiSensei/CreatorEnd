@@ -20,7 +20,6 @@ export default class PageComp extends React.Component<IProps, IState> {
     pageSelected(event) {
         //store the page access key
         Auth.setPageAccessToken(this.props.element.access_token);
-        console.log("Page Access Token", this.props.element.access_token);
         this.props.onPageSelect();
     }
 

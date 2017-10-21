@@ -228,7 +228,7 @@ namespace Requests {
             .then(res => res.json())
     }
 
-    export function getImagePost() {
+    export function getAllImagePost() {
         let url = config.restAPI + "/api/postImage";
         let headerObject = {};
         addAccessKey(headerObject as IHeaderObject);

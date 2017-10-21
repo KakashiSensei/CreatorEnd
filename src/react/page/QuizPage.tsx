@@ -14,7 +14,7 @@ interface IState {
     quizDataReceived: IQuizData[];
 }
 
-export default class HomePage extends React.Component<IProps, IState> {
+export default class QuizPage extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {

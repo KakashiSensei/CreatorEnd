@@ -52,7 +52,7 @@ export default class HomePage extends React.Component<IProps, IState> {
                 })
             })
 
-        Request.getImagePost()
+        Request.getAllImagePost()
             .then((data) => {
                 let sortedData: IImagePostData[] = Helper.sortContent(data, 3) as IImagePostData[];
                 this.setState({
@@ -148,7 +148,7 @@ export default class HomePage extends React.Component<IProps, IState> {
                     </Row>
                     <Row>
                         <Col s={9} className="alignRight">
-                            <Link to="/newimage">more...</Link>
+                            <Link to="/image">more...</Link>
                         </Col>
                     </Row>
                 </div>

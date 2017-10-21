@@ -88,17 +88,17 @@ export default class ImagePostRow extends React.Component<IProps, IState>{
                             let postTime = 0;
                             if (data.postTime) {
                                 let momentLastTime: moment.Moment = moment.unix(data.postTime);
-                                momentLastTime.add(3, 'h').toDate();
+                                momentLastTime.add(3, 'hours').toDate();
                                 postTime = momentLastTime.unix();
                             }
                             let dateNow = moment();
-                            dateNow.add(3, 'h').toDate();
+                            dateNow.add(3, 'hours').toDate();
                             let maxTime: number = Math.max(postTime, dateNow.unix());
                             let imageObject = {
                                 url: this.props.element.imageUrl,
                                 caption: this.state.postsMsg,
                                 published: false,
-                                scheduled_publish_time: dateNow.unix()
+                                scheduled_publish_time: maxTime
                             };
                             Requests.postOnFacebook(imageObject, Auth.getPageAccessToken())
                                 .then((facebookData: facebookPostData) => {
