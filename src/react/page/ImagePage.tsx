@@ -27,7 +27,7 @@ export default class ImagePage extends React.Component<IProps, IState> {
     componentDidMount() {
         Request.getAllImagePost()
         .then((data) => {
-            let sortedData: IImagePostData[] = Helper.sortContent(data, 3) as IImagePostData[];
+            let sortedData: IImagePostData[] = Helper.sortContent(data) as IImagePostData[];
             this.setState({
                 imageDataReceived: sortedData
             })
