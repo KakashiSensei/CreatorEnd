@@ -11,7 +11,9 @@
     "heroku": "node node/startServer"
   },
   "dependencies": {
+    "@types/react-redux": "^5.0.12",
     "brace": "^0.10.0",
+    "dom-tree": "^1.0.0",
     "es6-shim": "^0.35.3",
     "express": "^4.15.4",
     "isomorphic-fetch": "^2.2.1",
@@ -25,6 +27,8 @@
     "react-materialize": "^1.0.10",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2",
+    "redux-actions": "^2.2.1",
     "wl-parser": "^1.0.20",
     "youtube-embed-video": "^1.0.2"
   },

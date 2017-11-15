@@ -37,7 +37,7 @@ namespace Requests {
         addAccessKey(headerObject as IHeaderObject);
         return fetch(url, {
             method: 'GET',
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -53,7 +53,7 @@ namespace Requests {
         return fetch(url, {
             method: 'POST',
             body: JSON.stringify(postData),
-            headers: headerObject
+            headers: new Headers(headerObject)
         }).then(res => res.json())
     }
 
@@ -68,7 +68,7 @@ namespace Requests {
         return fetch(url, {
             method: 'POST',
             body: JSON.stringify(postData),
-            headers: headerObject
+            headers: new Headers(headerObject)
         }).then(res => res.json())
     }
 
@@ -78,7 +78,7 @@ namespace Requests {
         addAccessKey(headerObject as IHeaderObject);
         return fetch(url, {
             method: 'GET',
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -95,7 +95,7 @@ namespace Requests {
         return fetch(url, {
             method: method,
             body: JSON.stringify(data),
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -112,7 +112,7 @@ namespace Requests {
         return fetch(url, {
             method: method,
             body: JSON.stringify(data),
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -123,7 +123,7 @@ namespace Requests {
         addAccessKey(headerObject as IHeaderObject);
         return fetch(url, {
             method: 'GET',
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -134,7 +134,7 @@ namespace Requests {
         addAccessKey(headerObject as IHeaderObject);
         return fetch(url, {
             method: 'DELETE',
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -145,7 +145,7 @@ namespace Requests {
         addAccessKey(headerObject as IHeaderObject);
         return fetch(url, {
             method: 'GET',
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -169,7 +169,7 @@ namespace Requests {
         return fetch(url, {
             method: 'POST',
             body: JSON.stringify(data),
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -185,7 +185,7 @@ namespace Requests {
         return fetch(url, {
             method: 'PUT',
             body: JSON.stringify(data),
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -196,7 +196,7 @@ namespace Requests {
         addAccessKey(headerObject as IHeaderObject);
         return fetch(url, {
             method: 'GET',
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -207,7 +207,7 @@ namespace Requests {
         addAccessKey(headerObject as IHeaderObject);
         return fetch(url, {
             method: 'DELETE',
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json());
     }
@@ -223,7 +223,7 @@ namespace Requests {
         return fetch(url, {
             method: 'POST',
             body: JSON.stringify(data),
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -234,7 +234,7 @@ namespace Requests {
         addAccessKey(headerObject as IHeaderObject);
         return fetch(url, {
             method: 'GET',
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -245,7 +245,7 @@ namespace Requests {
         addAccessKey(headerObject as IHeaderObject);
         return fetch(url, {
             method: 'DELETE',
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json());
     }
@@ -261,7 +261,7 @@ namespace Requests {
         return fetch(url, {
             method: "POST",
             body: JSON.stringify(postData),
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -277,7 +277,7 @@ namespace Requests {
         return fetch(url, {
             method: "POST",
             body: JSON.stringify(postData),
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -288,7 +288,7 @@ namespace Requests {
         addAccessKey(headerObject as IHeaderObject);
         return fetch(url, {
             method: 'GET',
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -304,7 +304,7 @@ namespace Requests {
         return fetch(url, {
             method: 'POST',
             body: JSON.stringify(postData),
-            headers: headerObject
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }
@@ -315,7 +315,23 @@ namespace Requests {
         addAccessKey(headerObject as IHeaderObject);
         return fetch(url, {
             method: 'GET',
-            headers: headerObject
+            headers: new Headers(headerObject)
+        })
+            .then(res => res.json())
+    }
+
+    export function makeQuoteImage(dom): Promise<{}> {
+        let url = `${config.restAPI}/api/editableQuote/makeImage`;
+        let headerObject = {};
+        addAccessKey(headerObject as IHeaderObject);
+        headerObject = _.assign(headerObject, {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        });
+        return fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(dom),
+            headers: new Headers(headerObject)
         })
             .then(res => res.json())
     }

@@ -10,6 +10,7 @@ import ImageCreatorPage from "./react/page/ImageCreatorPage";
 import ImagePage from "./react/page/ImagePage";
 import LoginPage from "./react/page/LoginPage";
 import NavBar from "./react/components/NavBar";
+import VisiblePostCreator from "./react/page/postImage/containers/VisiblePostCreator";
 import PrivateRoute from "./PrivateRoute";
 import Helper from "./Helper";
 import Auth from "./Auth";
@@ -118,7 +119,8 @@ export default class Routes extends React.Component<IProps, IState> {
                 <PrivateRoute exact path="/newvideo" component={VideoCreatorPage} />
                 <PrivateRoute exact path="/quiz" component={QuizPage} />
                 <PrivateRoute exact path="/video" component={VideoPage} />
-                <PrivateRoute exact path="/newimage" component={ImageCreatorPage} />
+                {/* <PrivateRoute exact path="/newimage" component={ImageCreatorPage} /> */}
+                <PrivateRoute exact path="/newimage" component={VisiblePostCreator} />
                 <PrivateRoute exact path="/image" component={ImagePage} />
                 <Route exact path="/login" component={LoginPage} />
             </div>
