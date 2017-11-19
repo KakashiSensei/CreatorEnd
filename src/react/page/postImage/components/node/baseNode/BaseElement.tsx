@@ -12,18 +12,21 @@ interface IProps {
 interface IState {
     top: string;
     left: string;
+    contentEditable: boolean
 }
 
 export default class BaseElement extends React.Component<IProps, IState> {
     private shiftCoordinates: Point;
     private htmlElement: HTMLElement;
     private containerElement: HTMLElement;
+
     constructor(props: IProps) {
         super(props);
 
         this.state = {
             top: "0px",
-            left: "0px"
+            left: "0px",
+            contentEditable: false
         }
 
         this.onDragStart = this.onDragStart.bind(this);
@@ -48,16 +51,18 @@ export default class BaseElement extends React.Component<IProps, IState> {
         return false;
     }
 
-    moveElement(point: Point) {
+    moveElement(point: Point): Point {
         let newTop: number = point.y - this.containerElement.offsetTop - this.shiftCoordinates.y;
         let newLeft: number = point.x - this.containerElement.offsetLeft - this.shiftCoordinates.x;
         this.setState({
             top: newTop + "px",
             left: newLeft + "px"
         })
+        return new Point(newTop, newLeft);
     }
 
     onMouseDown(event) {
+        console.log("Inside mouse down")
         let shiftX: number = event.clientX - this.htmlElement.getBoundingClientRect().left;
         let shiftY: number = event.clientY - this.htmlElement.getBoundingClientRect().top;
         this.shiftCoordinates = new Point(shiftX, shiftY);
@@ -71,5 +76,8 @@ export default class BaseElement extends React.Component<IProps, IState> {
 
     onMouseUp(event) {
         document.removeEventListener('mousemove', this.onMouseMove);
+        let point = this.moveElement(new Point(event.pageX, event.pageY));
+        let elementPosition = { top: point.x + "px", left: point.y + "px"};
+        this.props.dispatch(editText(this.props.element, elementPosition, {}));
     }
 }

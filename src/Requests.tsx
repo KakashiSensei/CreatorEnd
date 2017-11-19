@@ -335,6 +335,16 @@ namespace Requests {
         })
             .then(res => res.json())
     }
+
+    export function getNewQuote(): Promise<{}> {
+        let url = 'https://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json&key='+Math.floor(100000 + Math.random() * 900000);
+        let headerObject = {};
+        return fetch(url, {
+            method: 'GET',
+            headers: new Headers(headerObject)
+        })
+            .then(res => res.json())
+    }
 }
 
 export default Requests;

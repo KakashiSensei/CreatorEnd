@@ -17,8 +17,8 @@ export default handleActions<State, Element>({
     [combineActions(editText, editBackground)](state: State, action: Action<Element>) {
         let newState: State = new State();
         newState.container = { ...state.container };
-        newState.components = [...state.components];
-        newState.components.map((value, key) => {
+        newState.components = [];
+        newState.components = state.components.map((value, key) => {
             if (action.payload.id === value.id) {
                 return action.payload;
             }
@@ -26,7 +26,7 @@ export default handleActions<State, Element>({
         })
         return newState;
     },
-    [ADD_TEXT]: (state: State, action: Action<Element>): State => {
+    [combineActions(addText, addBackground)]: (state: State, action: Action<Element>): State => {
         let newState: State = new State();
         newState.container = { ...state.container };
         newState.components = [...state.components, action.payload.element];
