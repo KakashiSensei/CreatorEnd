@@ -16,54 +16,57 @@
     text-align: center
 }
 
-.alignRight{
+.alignRight {
     text-align: right;
 }
 
-.editorSize{
+.editorSize {
     width: 100%;
 }
 
-.backgroundColor{
+.backgroundColor {
     background-color: #26a69a;
 }
 
-.chip{
+.chip {
     background-color: #4CAF50;
     color: white;
 }
 
-.iconImageSize{
+.iconImageSize {
     height: 50px;
     vertical-align: middle;
 }
 
-.basePadding{
+.basePadding {
     padding: 10px
 }
 
-.iframeSize{
+.baseMargin {
+    margin: 5px
+}
+
+.iframeSize {
     width: 698px;
     height: 367px;
     overflow: hidden
 }
 
-.relativePosition{
+.relativePosition {
     position: relative;
 }
 
-.scaleDown{
-    
+.scaleDown {
     -ms-zoom: 0.5;
-        -moz-transform: scale(0.5);
-        -moz-transfÏorm-origin: 0 0;
-        -o-transform: scale(0.5);
-        -o-transform-origin: 0 0;
-        -webkit-transform: scale(0.5);
-        -webkit-transform-origin: 0 0;
+    -moz-transform: scale(0.5);
+    -moz-transfÏorm-origin: 0 0;
+    -o-transform: scale(0.5);
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale(0.5);
+    -webkit-transform-origin: 0 0;
 }
 
-.aceBorder{
+.aceBorder {
     border: 1px solid #9e9e9e
 }
 

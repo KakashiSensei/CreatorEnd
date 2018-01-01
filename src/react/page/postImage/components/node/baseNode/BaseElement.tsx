@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Element, Point } from '../../../postImageConstants';
 import { Dispatch } from 'redux';
-import { editText } from '../../../actions';
+import { editText, elementSelected } from '../../../actions';
 import * as _ from 'lodash';
 
 interface IProps {
@@ -12,7 +12,7 @@ interface IProps {
 interface IState {
     top: string;
     left: string;
-    contentEditable: boolean
+    editable: boolean;
 }
 
 export default class BaseElement extends React.Component<IProps, IState> {
@@ -26,13 +26,14 @@ export default class BaseElement extends React.Component<IProps, IState> {
         this.state = {
             top: "0px",
             left: "0px",
-            contentEditable: false
+            editable: false
         }
 
         this.onDragStart = this.onDragStart.bind(this);
         this.onMouseDown = this.onMouseDown.bind(this);
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);
+        this.onSingleClick = this.onSingleClick.bind(this);
     }
 
     componentDidMount() {
@@ -52,6 +53,10 @@ export default class BaseElement extends React.Component<IProps, IState> {
     }
 
     moveElement(point: Point): Point {
+        //======================== this is workaround for the bug coming on dragging
+        if (!this.shiftCoordinates)
+            return;
+
         let newTop: number = point.y - this.containerElement.offsetTop - this.shiftCoordinates.y;
         let newLeft: number = point.x - this.containerElement.offsetLeft - this.shiftCoordinates.x;
         this.setState({
@@ -62,7 +67,7 @@ export default class BaseElement extends React.Component<IProps, IState> {
     }
 
     onMouseDown(event) {
-        console.log("Inside mouse down")
+        this.htmlElement = this.refs[this.props.element.id] as HTMLElement;
         let shiftX: number = event.clientX - this.htmlElement.getBoundingClientRect().left;
         let shiftY: number = event.clientY - this.htmlElement.getBoundingClientRect().top;
         this.shiftCoordinates = new Point(shiftX, shiftY);
@@ -77,7 +82,16 @@ export default class BaseElement extends React.Component<IProps, IState> {
     onMouseUp(event) {
         document.removeEventListener('mousemove', this.onMouseMove);
         let point = this.moveElement(new Point(event.pageX, event.pageY));
-        let elementPosition = { top: point.x + "px", left: point.y + "px"};
-        this.props.dispatch(editText(this.props.element, elementPosition, {}));
+        //===================== this is workaround for the bug coming on dragging
+        if (!point) {
+            return;
+        }
+        let elementPosition = { top: point.x + "px", left: point.y + "px" };
+        this.props.dispatch(editText(this.props.element, elementPosition, null));
+    }
+
+    onSingleClick(event) {
+        let id: string = this.props.element.id;
+        this.props.dispatch(elementSelected(id));
     }
 }

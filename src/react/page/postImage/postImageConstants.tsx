@@ -6,6 +6,7 @@ export const ADD_BACKGROUND = "addBackground";
 export const EDIT_TEXT = "editText";
 export const EDIT_BACKGROUND = "editBackground";
 export const DELETE_ELEMENT = "deleteElement";
+export const ELEMENT_SELECTED = "elementSelected";
 
 export class Point {
     x: number;
@@ -14,6 +15,11 @@ export class Point {
         this.x = _x;
         this.y = _y;
     }
+}
+
+export interface FontStructure {
+    url: string;
+    name: string;
 }
 
 export class Element {
@@ -59,33 +65,40 @@ export class TextElement extends Element {
             top: '200px',
             width: '500px',
             fontSize: '25px',
+            fontFamily: 'Pacifico',
             WebkitTouchCallout: 'none',
             WebkitUserSelect: 'none',
             KhtmlUserSelect: 'none',
             MozUserSelect: 'none',
             MsUserSelect: 'none',
-            userSelect: 'none'
+            userSelect: 'none',
+            zIndex: 1,
+            whiteSpace: 'pre-wrap'
         })
     }
 }
 
 export class BackgroundElement extends Element {
-    constructor(){
+    constructor(imageURL: string) {
         super();
         this.type = "Background";
         this.props = _.assign(this.props, {
             position: 'absolute',
             backgroundColor: "#FFFF00",
-            background: 'url("https://static.pexels.com/photos/34950/pexels-photo.jpg")50% 50% no-repeat',
+            backgroundImage: `url("${imageURL}")`,
+            backgroundRepeat: `no-repeat`,
+            backgroundPosition: `50% 50%`,
             backgroundSize: 'cover',
             imageRendering: '-webkit-optimize-contrast',
             width: '100%',
-            height: '100%'
+            height: '100%',
+            zIndex: 0
         })
     }
 }
 
 export class State {
+    selectedElement: string;
     container: Element;
     components: Element[];
     constructor() {

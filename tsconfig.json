@@ -8,9 +8,6 @@
     "jsx": "react",
     "noImplicitAny": false
   },
-  "include": [
-    "./src/**/*"
-  ],
   "exclude": [
     "node_modules",
     "**/__tests__/*.ts"

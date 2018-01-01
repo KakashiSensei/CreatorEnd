@@ -18,8 +18,10 @@ export default class Background extends BaseElement {
 
     render() {
         let { element } = this.props;
+        let cssToShow = { ...element.props };
+
         return (
-            <div ref={element.id} style={this.props.element.props} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} onDragStart={this.onDragStart}></div>
+            <div ref={element.id} style={cssToShow} onClick={this.onSingleClick}></div>
         )
     }
 }

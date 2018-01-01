@@ -1,0 +1,112 @@
+{
+    "font":[
+        {
+            "url": "https://fonts.googleapis.com/css?family=Fontdiner+Swanky",
+            "name": "Fontdiner Swanky, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Oswald",
+            "name": "Oswald, sans-serif"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Crafty+Girls",
+            "name": "Crafty Girls, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Pacifico",
+            "name": "Pacifico, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Oleo+Script",
+            "name": "Oleo Script, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Lobster+Two",
+            "name": "Lobster Two, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Berkshire+Swash",
+            "name": "Berkshire Swash, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Merienda+One",
+            "name": "Merienda One, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Just+Another+Hand",
+            "name": "Just Another Hand, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Arizonia",
+            "name": "Arizonia, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Cookie",
+            "name": "Cookie, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Great+Vibes",
+            "name": "Great Vibes, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Leckerli+One",
+            "name": "Leckerli One, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Aguafina+Script",
+            "name": "Aguafina Script, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Allura",
+            "name": "Allura, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Condiment",
+            "name": "Condiment, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Damion",
+            "name": "Damion, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Devonshire",
+            "name": "Devonshire, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Open+Sans",
+            "name": "Open Sans, sans-serif"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Josefin+Slab",
+            "name": "Josefin Slab, serif"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Arvo",
+            "name": "Arvo, serif"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Lato",
+            "name": "Lato, sans-serif"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Vollkorn",
+            "name": "Vollkorn, serif"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Abril+Fatface",
+            "name": "Abril Fatface, cursive"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Ubunt",
+            "name": "Ubuntu, sans-serif"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=PT+Sans",
+            "name": "PT Sans, sans-serif"
+        },
+        {
+            "url": "https://fonts.googleapis.com/css?family=Old+Standard+TT",
+            "name": "Old Standard TT, serif"
+        }
+    ]
+}

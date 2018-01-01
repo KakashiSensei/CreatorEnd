@@ -337,13 +337,39 @@ namespace Requests {
     }
 
     export function getNewQuote(): Promise<{}> {
-        let url = 'https://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json&key='+Math.floor(100000 + Math.random() * 900000);
-        let headerObject = {};
-        return fetch(url, {
-            method: 'GET',
-            headers: new Headers(headerObject)
+        // let url = 'https://quotes.rest/qod';
+        // let headerObject = {};
+        // headerObject = _.assign(headerObject, {
+        //     'Accept': 'application/json',
+        //     'Content-Type': 'application/json'
+        // });
+        // return fetch(url, {
+        //     method: 'GET'
+        // })
+        //     .then(res => res.json())
+        return new Promise((resolve, reject) => {
+            let url = "http://api.forismatic.com/api/1.0/?method=getQuote&key=457653&format=jsonp&lang=en&jsonp=?";
+            let getQuote = function (data) {
+                resolve(data);
+            };
+            (window as any).$.getJSON(url, getQuote, 'jsonp');
         })
-            .then(res => res.json())
+    }
+
+    export function getCorrespondingImage(qs: Array<string>): Promise<{}> {
+        let queryString = qs.reduce((preValue, curValue) => {
+            if (!preValue) {
+                return curValue;
+            }
+            return `${preValue} + ${curValue}`;
+        }, "");
+        
+        let width = 1024;
+        let height = 768;
+        let url = `https://pixabay.com/api?key=4392968-f9373bdb7eda6ac0964fe8d63&q=${queryString}&orientation=horizontal&safesearch=true&min_width=${width}&min_height=${height}`;
+        return fetch(url, {
+            method: 'GET'
+        }).then(res => res.json())
     }
 }
 

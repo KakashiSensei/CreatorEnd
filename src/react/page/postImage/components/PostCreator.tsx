@@ -1,11 +1,17 @@
 import * as React from "react";
 import { Dispatch } from 'redux';
-import { addContainer, addText, addBackground } from "../actions";
+import { addContainer, addText, addBackground, editBackground } from "../actions";
 import { Element, TextElement, ContainerElement, BackgroundElement, State } from '../postImageConstants';
 import * as _ from 'lodash';
-import { Row, Col, Button } from 'react-materialize';
+import { Row, Col, Button, Input } from 'react-materialize';
 import './PostCreator.css';
 import Requests from '../../../../Requests';
+import * as keywordExtractor from "keyword-extractor";
+
+interface CheckboxStatus {
+    name: string;
+    checked: boolean;
+}
 
 interface IProps {
     postReducer: State;
@@ -13,12 +19,22 @@ interface IProps {
 }
 
 interface IState {
+    tags: Array<CheckboxStatus>
 }
 
 export default class PostCreator extends React.Component<IProps, IState> {
+    backgroundID: string;
+    quoteID: string;
+    authorID: string;
+
     constructor(props: IProps) {
         super(props);
         this.savePost = this.savePost.bind(this);
+        this.state = {
+            tags: []
+        }
+        this.removeSelectedTag = this.removeSelectedTag.bind(this);
+        this.tagChanged = this.tagChanged.bind(this);
     }
 
     componentDidMount() {
@@ -26,14 +42,71 @@ export default class PostCreator extends React.Component<IProps, IState> {
         let containerElement: ContainerElement = new ContainerElement();
         this.props.dispatch(addContainer(containerElement));
 
-        let backgroundElement: BackgroundElement = new BackgroundElement();
-        this.props.dispatch(addBackground(backgroundElement));
-
         // add the new text here
         Requests.getNewQuote().then((res) => {
             let quote = res['quoteText'];
             let textElement: TextElement = new TextElement(quote);
             this.props.dispatch(addText(textElement));
+            let queryString: Array<string> = keywordExtractor.extract(quote, {
+                language: "english",
+                remove_digits: true,
+                return_changed_case: true,
+                remove_duplicates: true
+            })
+            let mapString: Array<CheckboxStatus> = queryString.map((value, key) => {
+                return { name: value, checked: false }
+            })
+            mapString.unshift({ name: "nature", checked: true });
+            this.setState({
+                tags: mapString
+            })
+
+            this.getCorrespondingImages(this.state.tags).then((imageURL: string) => {
+                let backgroundElement: BackgroundElement = new BackgroundElement(imageURL);
+                this.props.dispatch(addBackground(backgroundElement));
+            })
+
+            // add the author here
+            let author: string = "- " + res['quoteAuthor'];
+            let authorElement: TextElement = new TextElement(author);
+            this.props.dispatch(addText(authorElement));
+        })
+    }
+
+    tagChanged(event) {
+        let target = event.target;
+        let index = +target.name;
+        let checked: boolean = event.target.checked;
+
+        this.state.tags[index].checked = checked;
+        this.setState({
+            tags: this.state.tags
+        }, () => {
+            this.getCorrespondingImages(this.state.tags).then((imageURL: string) => {
+                let element: Element = _.find(this.props.postReducer.components, { type: "Background" })
+                this.props.dispatch(editBackground(element, { backgroundImage: `url("${imageURL}"` }))
+            })
+        })
+    }
+
+    removeSelectedTag(event) {
+        console.log("Inside remove selected tag");
+    }
+
+    getCorrespondingImages(qs: Array<CheckboxStatus>): Promise<{}> {
+        let quesryString: Array<CheckboxStatus> = qs.filter((value, key) => {
+            return value.checked;
+        })
+        let nameString: Array<string> = quesryString.map((value, key) => {
+            return value.name;
+        })
+        return Requests.getCorrespondingImage(nameString).then((result) => {
+            let imageURL: string;
+            if (result && result["hits"] && result["hits"].length > 0) {
+                let randomImage: number = Math.floor(Math.random() * result["hits"].length);
+                imageURL = result["hits"][randomImage]["webformatURL"];
+            }
+            return imageURL;
         })
     }
 
@@ -54,12 +127,11 @@ export default class PostCreator extends React.Component<IProps, IState> {
                 height: 367px;
             }
         </style>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.css" ref="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
         
         <body class="bodyClass">
         ${document.getElementById('saveDiv').innerHTML}
         </body>
-        
         </html>`
 
         let postData = {
@@ -73,10 +145,18 @@ export default class PostCreator extends React.Component<IProps, IState> {
     render() {
         const { postReducer, dispatch } = this.props;
         let containerStyle = postReducer.container.props;
-        console.log(postReducer.components);
+
+        //add the editable functionality here
+        let elementID = this.props.postReducer.selectedElement;
+        let EditableElement = <div></div>
+        if (elementID) {
+            let elementString = _.find(this.props.postReducer.components, {id: elementID});
+            let EditableClass = require(`./editOptions/${elementString.type}Edit`).default;
+            EditableElement = <EditableClass dispatch={dispatch} state={postReducer} />
+        }
 
         return (
-            <Row>
+            <Row className="marginTop">
                 <Col s={6} className='containerDisplay'>
                     <Row id="saveDiv">
                         <div id="containerDiv" style={containerStyle}>
@@ -92,6 +172,18 @@ export default class PostCreator extends React.Component<IProps, IState> {
                         </Col>
                     </Row>
                 </Col>
+                <Col s={6}>
+                    <Row>
+                        {this.state.tags.map((value, key) => {
+                            let defaultValue = value.checked ? "checked" : undefined;
+                            return <Input key={key} name={key.toString()} type='checkbox' value={value.name} label={value.name} defaultChecked={defaultValue} onChange={this.tagChanged} />
+                        })}
+                    </Row>
+                    <Row>
+                        {EditableElement}
+                    </Row>
+                </Col>
+
             </Row>
         )
     }
