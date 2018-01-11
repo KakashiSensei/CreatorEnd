@@ -23,11 +23,10 @@ namespace LoadFont {
             }
         }
         _.forEach(fontArray, (value, key) => {
-            let newElement = document.createElement('link');
-            newElement.setAttribute('rel', 'stylesheet');
-            newElement.setAttribute('href', value.url);
-            document.head.appendChild(newElement);
-            fontLoaded.push();
+            var newElement = document.createElement("style");
+            newElement.type = "text/css"; 
+            newElement.innerHTML = `@font-face {font-family: ${value.name};  src: url(${value.ttf});}`;   
+            document.getElementsByTagName('head')[0].appendChild(newElement);
         })
     }
 }

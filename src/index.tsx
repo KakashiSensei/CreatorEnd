@@ -4,10 +4,9 @@ import Routes from "./Routes";
 
 import { Provider } from 'react-redux'
 import { Store, createStore } from 'redux'
-import rootReducer from './reducers'
-
-import "materialize-css/dist/css/materialize.css";
+import rootReducer from './reducers';
 import "materialize-css/dist/js/materialize.js";
+import "materialize-css/dist/css/materialize.css";
 import "./react/css/main.css";
 import "./react/css/creator.css";
 

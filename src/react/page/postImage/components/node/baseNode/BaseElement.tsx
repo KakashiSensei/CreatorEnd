@@ -3,6 +3,7 @@ import { Element, Point } from '../../../postImageConstants';
 import { Dispatch } from 'redux';
 import { editText, elementSelected } from '../../../actions';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 interface IProps {
     element: Element;
@@ -19,6 +20,7 @@ export default class BaseElement extends React.Component<IProps, IState> {
     private shiftCoordinates: Point;
     private htmlElement: HTMLElement;
     private containerElement: HTMLElement;
+    private dragStartTime: number;
 
     constructor(props: IProps) {
         super(props);
@@ -73,6 +75,7 @@ export default class BaseElement extends React.Component<IProps, IState> {
         this.shiftCoordinates = new Point(shiftX, shiftY);
         this.moveElement(new Point(event.pageX, event.pageY));
         document.addEventListener('mousemove', this.onMouseMove);
+        this.dragStartTime = moment().valueOf();
     }
 
     onMouseMove(event) {
@@ -91,7 +94,10 @@ export default class BaseElement extends React.Component<IProps, IState> {
     }
 
     onSingleClick(event) {
-        let id: string = this.props.element.id;
-        this.props.dispatch(elementSelected(id));
+        let dragEndTime = moment().valueOf();
+        if ((dragEndTime - this.dragStartTime) <= 300 || !this.dragStartTime) {
+            let id: string = this.props.element.id;
+            this.props.dispatch(elementSelected(id));
+        }
     }
 }

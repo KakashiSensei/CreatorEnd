@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Dispatch } from 'redux';
-import { Element, State, FontStructure } from '../../postImageConstants';
+import { Element, State, FontStructure, Colors } from '../../postImageConstants';
 import { SketchPicker } from 'react-color';
 import { editText } from "../../actions";
 import * as _ from "lodash";
@@ -10,6 +10,7 @@ import LoadFont from "../../../../../LoadFont";
 
 interface IProps {
     state: State
+    quoteObject: Object;
     dispatch: Dispatch<{}>;
 }
 
@@ -22,7 +23,6 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
-        console.log("Selected Element", this.props.state.selectedElement);
         this.handleColorChange = this.handleColorChange.bind(this);
         this.handleFontSizeChange = this.handleFontSizeChange.bind(this);
         this.handleFontTypeChange = this.handleFontTypeChange.bind(this);
@@ -93,15 +93,12 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
     }
 
     render() {
-        // console.log("selectedElement", this.props.state.selectedElement);
-        let colors = ["#000000", "#FFFFFF", "#F44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548", "#9E9E9E", "#607D8B"];
+        let colors = Colors;
         let element = this.findElement(this.props.state.selectedElement);
         let color = (element.props as any).color;
 
         let fontSize = (element.props as any).fontSize.replace("px", "");
-        
         let fontName: string = (element.props as any).fontFamily;
-        console.log(fontName);
 
         // workaround because on click not working on select tag
         setTimeout(() => {
@@ -124,7 +121,6 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
                             {fonts["font"].map((value: FontStructure, key) => {
                                 let fontName = value.name.split(",")[0].split("'").join("");
                                 this.fontNameArray.push(fontName);
-
                                 return <option key={key} value={fontName}>{fontName}</option>
                             })}
                         </Input>

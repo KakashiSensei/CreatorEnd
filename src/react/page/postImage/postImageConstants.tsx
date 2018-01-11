@@ -8,6 +8,8 @@ export const EDIT_BACKGROUND = "editBackground";
 export const DELETE_ELEMENT = "deleteElement";
 export const ELEMENT_SELECTED = "elementSelected";
 
+export let Colors = ["#000000", "#FFFFFF", "#F44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548", "#9E9E9E", "#607D8B"];
+
 export class Point {
     x: number;
     y: number;
@@ -20,6 +22,7 @@ export class Point {
 export interface FontStructure {
     url: string;
     name: string;
+    ttf: string;
 }
 
 export class Element {
@@ -54,15 +57,13 @@ export class ContainerElement extends Element {
 }
 
 export class TextElement extends Element {
-    constructor(text: string) {
+    constructor(text: string, props?: Object) {
         super();
         this.data = _.assign(this.data, { text: text });
         this.type = "TextField";
         this.props = _.assign(this.props, {
             position: 'absolute',
             color: '#FAEBD7',
-            left: '200px',
-            top: '200px',
             width: '500px',
             fontSize: '25px',
             fontFamily: 'Pacifico',
@@ -75,17 +76,21 @@ export class TextElement extends Element {
             zIndex: 1,
             whiteSpace: 'pre-wrap'
         })
+        // replace default props with passed props
+        this.props = _.assign(this.props, props);
     }
 }
 
 export class BackgroundElement extends Element {
-    constructor(imageURL: string) {
+    constructor(props?: Object) {
         super();
         this.type = "Background";
+        // make random color
+        let random = Math.floor(Colors.length * Math.random());
+        let color = Colors[random];
         this.props = _.assign(this.props, {
             position: 'absolute',
-            backgroundColor: "#FFFF00",
-            backgroundImage: `url("${imageURL}")`,
+            backgroundColor: color,
             backgroundRepeat: `no-repeat`,
             backgroundPosition: `50% 50%`,
             backgroundSize: 'cover',
@@ -94,6 +99,9 @@ export class BackgroundElement extends Element {
             height: '100%',
             zIndex: 0
         })
+
+        // replace default props with passed props
+        this.props = _.assign(this.props, props);
     }
 }
 

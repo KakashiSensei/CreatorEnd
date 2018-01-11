@@ -3,6 +3,10 @@ import BaseElement from "./baseNode/BaseElement";
 import { Element, Point } from '../../postImageConstants';
 import { Dispatch } from 'redux';
 import { editText } from "../../actions/index";
+import * as fonts from "../../../../../../font.json";
+import * as _ from "lodash";
+import { FontStructure } from "../../../../page/postImage/postImageConstants";
+import LoadFont from "../../../../../LoadFont";
 
 interface IProps {
     element: Element;
@@ -20,9 +24,24 @@ export default class TextField extends BaseElement {
 
     constructor(props: IProps) {
         super(props);
+
+        this.state = {
+            top: this.props.element.props["top"],
+            left: this.props.element.props["left"],
+            editable: false
+        }
+
         this.onDoubleClick = this.onDoubleClick.bind(this);
         this.onBlurOut = this.onBlurOut.bind(this);
         this.onTextChange = this.onTextChange.bind(this);
+
+        let fontName = this.props.element.props["fontFamily"];
+        let fontArray: Array<FontStructure> = fonts["font"]
+        let fontInJSON = _.find(fontArray, (value: FontStructure, key) => {
+            return value.name.indexOf(fontName) !== -1;
+        })
+        
+        LoadFont.load(fontInJSON);
     }
 
     componentDidMount() {
@@ -43,7 +62,7 @@ export default class TextField extends BaseElement {
         let { dispatch, element } = this.props;
         let textValue = (this.refs[element.id] as any).value;
         console.log(textValue);
-        dispatch(editText(element, {}, {text: textValue}));
+        dispatch(editText(element, {}, { text: textValue }));
     }
 
     onMouseMove(event) {
