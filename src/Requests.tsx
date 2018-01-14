@@ -354,22 +354,6 @@ namespace Requests {
             .then(res => res.json())
     }
 
-    export function makeQuoteImage(dom): Promise<{}> {
-        let url = `${config.restAPI}/api/editableQuote/makeImage`;
-        let headerObject = {};
-        addAccessKey(headerObject as IHeaderObject);
-        headerObject = _.assign(headerObject, {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        });
-        return fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(dom),
-            headers: new Headers(headerObject)
-        })
-            .then(res => res.json())
-    }
-
     export function getNewQuote(): Promise<{}> {
         // let url = 'https://quotes.rest/qod';
         // let headerObject = {};
