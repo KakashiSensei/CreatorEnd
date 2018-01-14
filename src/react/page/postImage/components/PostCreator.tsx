@@ -12,6 +12,7 @@ import * as  retinadomtoimage from 'retina-dom-to-image';
 import { IImagePostData, IUserDetail, status } from '../../../../Definition';
 import { history } from '../../../../Routes';
 import Auth from '../../../../Auth';
+import * as fonts from "../../../../../font.json";
 
 interface CheckboxStatus {
     name: string;
@@ -46,7 +47,6 @@ export default class PostCreator extends React.Component<IProps, IState> {
 
     componentDidMount() {
         // reset initial state
-
         if (this.state.imageID) {
             Requests.getImageWithID(this.state.imageID).then((data) => {
                 this.quoteObject = {
@@ -60,6 +60,10 @@ export default class PostCreator extends React.Component<IProps, IState> {
             let containerElement: ContainerElement = new ContainerElement();
             this.props.dispatch(addContainer(containerElement));
 
+            // random text element
+            let randomIndex = Math.floor(fonts["font"].length * Math.random());
+            let fontName = fonts["font"][randomIndex]["name"];
+
             // add the new text here
             Requests.getNewQuote().then((res) => {
                 this.quoteObject = res;
@@ -67,6 +71,7 @@ export default class PostCreator extends React.Component<IProps, IState> {
                 let textElement: TextElement = new TextElement(quote, {
                     left: '50px',
                     top: '100px',
+                    fontFamily: fontName
                 });
                 this.props.dispatch(addText(textElement));
 
@@ -79,7 +84,8 @@ export default class PostCreator extends React.Component<IProps, IState> {
                 let authorElement: TextElement = new TextElement(author, {
                     right: '100px',
                     bottom: '100px',
-                    width: '200px'
+                    width: '200px',
+                    fontFamily: fontName
                 });
                 this.props.dispatch(addText(authorElement));
             })
