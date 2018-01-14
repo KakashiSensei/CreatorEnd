@@ -366,7 +366,7 @@ namespace Requests {
         // })
         //     .then(res => res.json())
         return new Promise((resolve, reject) => {
-            let url = "http://api.forismatic.com/api/1.0/?method=getQuote&key=457653&format=jsonp&lang=en&jsonp=?";
+            let url = "https://api.forismatic.com/api/1.0/?method=getQuote&key=457653&format=jsonp&lang=en&jsonp=?";
             let getQuote = function (data) {
                 resolve(data);
             };
