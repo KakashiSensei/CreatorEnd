@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 import PostActions from '../actions';
 
 
-const mapStateToProps = state => ({
-    postReducer: state.postReducer
-})
+const mapStateToProps = state => {
+    return {
+        postReducer: state.postReducer
+    }
+}
 
 const VisiblePostCreator = connect(
     mapStateToProps

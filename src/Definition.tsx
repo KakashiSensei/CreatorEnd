@@ -19,6 +19,9 @@ export interface IImagePostData {
     _id?: number;
     imageUrl: string;
     createdBy: string;
+    quote: string;
+    author: string;
+    dom: Object;
     status?: status;
     postTime?: number;
     createdAt?: number;

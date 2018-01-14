@@ -122,6 +122,7 @@ export default class Routes extends React.Component<IProps, IState> {
                 {/* <PrivateRoute exact path="/newimage" component={ImageCreatorPage} /> */}
                 <PrivateRoute exact path="/newimage" component={VisiblePostCreator} />
                 <PrivateRoute exact path="/image" component={ImagePage} />
+                <PrivateRoute exact path="/imageedit/:id" component={VisiblePostCreator} />
                 <Route exact path="/login" component={LoginPage} />
             </div>
         </Router>

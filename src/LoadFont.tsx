@@ -22,6 +22,7 @@ namespace LoadFont {
                 !fontObject && fontArray.push(fontJSON[i]);
             }
         }
+        
         _.forEach(fontArray, (value, key) => {
             var newElement = document.createElement("style");
             newElement.type = "text/css"; 

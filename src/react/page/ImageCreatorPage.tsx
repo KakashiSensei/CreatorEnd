@@ -49,20 +49,20 @@ export default class ImageCreatorPage extends React.Component<IProps, IState> {
 
     submitClicked(e) {
         // let size = this.state.imageArray.length;
-        let promiseArray: Promise<void>[] = [];
-        let userDetail: IUserDetail = Auth.getUserDetail();
-        _.forEach(this.state.imageArray, (value, key) => {
-            let imageData: IImagePostData = {
-                imageUrl: value,
-                createdBy: userDetail.email
-            }
-            promiseArray.push(Requests.addNewImage(imageData));
-        })
+        // let promiseArray: Promise<void>[] = [];
+        // let userDetail: IUserDetail = Auth.getUserDetail();
+        // _.forEach(this.state.imageArray, (value, key) => {
+        //     let imageData: IImagePostData = {
+        //         imageUrl: value,
+        //         createdBy: userDetail.email
+        //     }
+        //     promiseArray.push(Requests.addNewImage(imageData));
+        // })
 
-        Promise.all(promiseArray).then(() => {
-            let location = "/";
-            history.push(location);
-        })
+        // Promise.all(promiseArray).then(() => {
+        //     let location = "/";
+        //     history.push(location);
+        // })
     }
 
     render() {

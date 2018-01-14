@@ -2,6 +2,7 @@ import * as React from "react";
 import { IImagePostData, IUserDetail, status } from "../../../Definition";
 import { Icon, Button, Chip, Input, Row, Col } from 'react-materialize';
 import Auth from "../../../Auth";
+import { history } from "../../../Routes";
 import Requests from "../../../Requests";
 import * as moment from "moment";
 
@@ -30,7 +31,14 @@ export default class ImagePostRow extends React.Component<IProps, IState>{
         }
         this.changeStatus = this.changeStatus.bind(this);
         this.cancelStatus = this.cancelStatus.bind(this);
+        this.editClicked = this.editClicked.bind(this);
         this.changePostMessgae = this.changePostMessgae.bind(this);
+    }
+
+    editClicked(e) {
+        let id = e._id;
+        let location = "/imageedit/" + id;
+        history.push(location);
     }
 
     cancelStatus() {
@@ -151,6 +159,7 @@ export default class ImagePostRow extends React.Component<IProps, IState>{
     render() {
         let statusElement;
         let deleteButton;
+        let editButton;
         let caption = <div></div>;
         if (this.userDetail.type === "admin") {
             switch (this.state.status) {
@@ -167,6 +176,11 @@ export default class ImagePostRow extends React.Component<IProps, IState>{
                         <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
                             <Icon tiny>delete</Icon>
                         </Button>;
+
+                    editButton =
+                        <Button floating onClick={() => { this.editClicked(this.props.element) }}>
+                            <Icon tiny>mode_edit</Icon>
+                        </Button>
                     break;
                 case status.IN_REVIEW:
                     statusElement =
@@ -181,6 +195,11 @@ export default class ImagePostRow extends React.Component<IProps, IState>{
                         <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
                             <Icon tiny>delete</Icon>
                         </Button>;
+
+                    editButton =
+                        <Button floating onClick={() => { this.editClicked(this.props.element) }}>
+                            <Icon tiny>mode_edit</Icon>
+                        </Button>
                     break;
                 case status.APPROVED:
                     statusElement =
@@ -192,7 +211,13 @@ export default class ImagePostRow extends React.Component<IProps, IState>{
                         <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
                             <Icon tiny>delete</Icon>
                         </Button>;
+
                     caption = <input style={{ width: '300px', marginLeft: '10px' }} type="text" value={this.state.postsMsg} onChange={this.changePostMessgae} />
+
+                    editButton =
+                        <Button floating onClick={() => { this.editClicked(this.props.element) }}>
+                            <Icon tiny>mode_edit</Icon>
+                        </Button>;
                     break;
                 case status.POSTED:
                     statusElement =
@@ -204,6 +229,7 @@ export default class ImagePostRow extends React.Component<IProps, IState>{
                     deleteButton = <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
                         <Icon tiny>delete</Icon>
                     </Button>;
+                    editButton = <span></span>;
                     break;
             }
         } else if (this.userDetail.type === "developer") {
@@ -221,6 +247,12 @@ export default class ImagePostRow extends React.Component<IProps, IState>{
                         <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
                             <Icon tiny>delete</Icon>
                         </Button>;
+
+                    editButton =
+                        <Button floating onClick={() => { this.editClicked(this.props.element) }}>
+                            <Icon tiny>mode_edit</Icon>
+                        </Button>;
+
                     break;
                 case status.IN_REVIEW:
                     statusElement =
@@ -235,6 +267,10 @@ export default class ImagePostRow extends React.Component<IProps, IState>{
                         <Button floating onClick={() => { this.props.deleteCallback(this.props.element) }}>
                             <Icon tiny>delete</Icon>
                         </Button>;
+
+                    editButton =
+                        <span></span>;
+
                     break;
                 case status.APPROVED:
                     statusElement =
@@ -244,6 +280,8 @@ export default class ImagePostRow extends React.Component<IProps, IState>{
 		                    </Chip>
                         </span>
                     deleteButton = <span></span>;
+                    editButton =
+                        <span></span>;
                     break;
                 case status.POSTED:
                     statusElement =
@@ -253,6 +291,8 @@ export default class ImagePostRow extends React.Component<IProps, IState>{
                             </Chip>
                         </span>
                     deleteButton = <span></span>;
+                    editButton =
+                        <span></span>;
                     break;
             }
         }
@@ -268,6 +308,9 @@ export default class ImagePostRow extends React.Component<IProps, IState>{
                 </td>
                 <td>
                     <div>
+                        <span className="paddingAround">
+                            {editButton}
+                        </span>
                         <span className="paddingAround">
                             {deleteButton}
                         </span>

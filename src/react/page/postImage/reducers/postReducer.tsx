@@ -7,6 +7,8 @@ import {
     EDIT_BACKGROUND,
     DELETE_ELEMENT,
     ELEMENT_SELECTED,
+    UPDATE_INITIALSTATE,
+    RESET_INITIAL_STATE,
     Element,
     State
 } from "../postImageConstants";
@@ -42,5 +44,14 @@ export default handleActions<State, Element>({
         let newState = { ...state };
         newState.selectedElement = action.payload.string;
         return newState;
+    },
+    [UPDATE_INITIALSTATE]: (state: State, action: Action<State>): State => {
+        let newState = action.payload.string;
+        return newState;
+    },
+    [RESET_INITIAL_STATE]: (state: State, action: Action<State>): State => {
+        let newState = new State();
+        return newState;
     }
+
 }, initialState);

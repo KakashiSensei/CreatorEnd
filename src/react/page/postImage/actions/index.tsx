@@ -8,6 +8,8 @@ import {
     EDIT_BACKGROUND,
     DELETE_ELEMENT,
     ELEMENT_SELECTED,
+    UPDATE_INITIALSTATE,
+    RESET_INITIAL_STATE,
     Element
 } from "../postImageConstants";
 
@@ -52,9 +54,18 @@ const deleteElement = createAction<Element, Element>(
 
 const elementSelected = createAction<string, string>(
     ELEMENT_SELECTED,
-    (string: string) => ({string: string})
+    (string: string) => ({ string: string })
 )
 
+const updateInitialState = createAction<string, string>(
+    UPDATE_INITIALSTATE,
+    (string: string) => ({ string: JSON.parse(string) })
+)
+
+const resetInitialState = createAction<string>(
+    RESET_INITIAL_STATE,
+    (string: string) => ({})
+)
 export {
     addContainer,
     addText,
@@ -62,5 +73,7 @@ export {
     addBackground,
     editBackground,
     deleteElement,
-    elementSelected
+    elementSelected,
+    updateInitialState,
+    resetInitialState
 }

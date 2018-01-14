@@ -1,7 +1,7 @@
 import config from "./config";
 import Auth from "./Auth";
 import * as _ from "lodash";
-import { IUserDetail, IQuizData, IVideoData, IImagePostData } from "./Definition";
+import { IUserDetail, IQuizData, IVideoData, IImagePostData } from './Definition';
 
 export interface IHeaderObject {
     Authorization: string;
@@ -23,6 +23,8 @@ export interface IFacebookRequestData {
     id: number;
     accessToken: string;
 }
+
+// export interface 
 
 namespace Requests {
     let addAccessKey = (headerObject: IHeaderObject) => {
@@ -228,6 +230,38 @@ namespace Requests {
             .then(res => res.json())
     }
 
+    export function updateNewImage(data: IImagePostData, postID: string) {
+        let method = 'PUT';
+        let url = config.restAPI + "/api/postImage/" + postID;
+        let headerObject = {};
+        addAccessKey(headerObject as IHeaderObject);
+        headerObject = _.assign(headerObject, {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        });
+        return fetch(url, {
+            method: method,
+            body: JSON.stringify(data),
+            headers: new Headers(headerObject)
+        })
+            .then(res => res.json())
+    }
+
+    export function getImageWithID(id: string) {
+        let url = config.restAPI + "/api/postImage/" + id;
+        let headerObject = {};
+        addAccessKey(headerObject as IHeaderObject);
+        headerObject = _.assign(headerObject, {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        });
+        return fetch(url, {
+            method: 'GET',
+            headers: new Headers(headerObject)
+        })
+            .then(res => res.json())
+    }
+
     export function getAllImagePost() {
         let url = config.restAPI + "/api/postImage";
         let headerObject = {};
@@ -363,7 +397,7 @@ namespace Requests {
             }
             return `${preValue} + ${curValue}`;
         }, "");
-        
+
         let width = 1024;
         let height = 768;
         let url = `https://pixabay.com/api?key=4392968-f9373bdb7eda6ac0964fe8d63&q=${queryString}&orientation=horizontal&safesearch=true&min_width=${width}&min_height=${height}`;
