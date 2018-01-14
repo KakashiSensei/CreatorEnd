@@ -75,6 +75,9 @@ export default class BackgroundEdit extends React.Component<IProps, IState> {
         // change the filter value depending opon the state
         let element = this.findElement(this.props.state.selectedElement);
         let filterElement: string = element.props["filter"];
+        if (!filterElement) {
+            return;
+        }
         let filterObject: Array<string> = filterElement.split(" ");
         let filterArray = [...this.state.filterValue];
         for (let i = 0; i < filterObject.length - 1; i++) {
