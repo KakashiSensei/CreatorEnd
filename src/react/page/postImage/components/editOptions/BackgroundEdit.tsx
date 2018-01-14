@@ -34,7 +34,6 @@ export default class BackgroundEdit extends React.Component<IProps, IState> {
         this.tagChanged = this.tagChanged.bind(this);
         this.onImageSelected = this.onImageSelected.bind(this);
         this.handleColorChange = this.handleColorChange.bind(this);
-        this.onFilterApply = this.onFilterApply.bind(this);
         this.handleOnChange = this.handleOnChange.bind(this);
         this.applyTint = this.applyTint.bind(this);
         let filterArray = [
@@ -72,6 +71,29 @@ export default class BackgroundEdit extends React.Component<IProps, IState> {
         this.setState({
             tags: mapString
         })
+
+        // change the filter value depending opon the state
+        let element = this.findElement(this.props.state.selectedElement);
+        let filterElement: string = element.props["filter"];
+        let filterObject: Array<string> = filterElement.split(" ");
+        let filterArray = [...this.state.filterValue];
+        for (let i = 0; i < filterObject.length - 1; i++) {
+            let singleFilter: string = filterObject[i];
+            singleFilter = singleFilter.replace("(", " ");
+            singleFilter = singleFilter.replace(")", "");
+            let filterSplit: Array<string> = singleFilter.split(" ");
+            let filterName: string = filterSplit[0];
+            let filterValue: string = filterSplit[1].replace("px", "").replace("deg", "");
+            let index = _.findIndex(filterArray, (value, key) => {
+                return value["name"] === filterName;
+            })
+            filterArray[index]["value"] = +filterValue;
+        }
+
+        // set the filter value here
+        this.setState({
+            filterValue: filterArray
+        })
     }
 
     applyTint(event) {
@@ -97,6 +119,7 @@ export default class BackgroundEdit extends React.Component<IProps, IState> {
         this.setState({
             filterValue: newFilterState,
         })
+        this.onFilterApply(newFilterState);
     }
 
     handleColorChange(event) {
@@ -104,19 +127,15 @@ export default class BackgroundEdit extends React.Component<IProps, IState> {
         this.props.dispatch(editBackground(element, { backgroundColor: event.hex }, {}));
     }
 
-    onFilterApply(event) {
-        let childCount = event.currentTarget.childElementCount;
+    onFilterApply(filterValue) {
         let filterText = "";
-        for (let i = 0; i < childCount; i++) {
-            let childID = event.currentTarget.children[i].id;
-            let inputTag = event.currentTarget.children[i].getElementsByTagName("input")[0];
-            if (inputTag.checked) {
-                let filterObject = _.find(this.state.filterValue, (value, key) => {
-                    return childID === value["name"];
-                })
-                filterText += `${childID}(${filterObject["value"]}${filterObject["suffix"]}) `;
-            }
+        for (let i = 0; i < filterValue.length; i++) {
+            let childID = filterValue[i]["name"];
+            let value = filterValue[i]["value"];
+            let suffix = filterValue[i]["suffix"];
+            filterText += `${childID}(${value}${suffix}) `;
         }
+
         let element = this.findElement(this.props.state.selectedElement);
         this.props.dispatch(editBackground(element, {
             filter: filterText,
@@ -191,11 +210,11 @@ export default class BackgroundEdit extends React.Component<IProps, IState> {
                                 <Input name="tint" type='checkbox' label="Tint" onChange={this.applyTint} />
                             </Col>
                         </Row>
-                        <div onChange={this.onFilterApply}>
+                        <div>
                             {this.state.filterValue.map((value, key) => {
                                 return <Row id={value["name"]} key={key}>
                                     <Col s={4}>
-                                        <Input name={value["name"]} type='checkbox' label={value["displayName"]} />
+                                        {value["displayName"]}
                                     </Col>
                                     <Col s={8}>
                                         <Slider
