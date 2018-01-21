@@ -6,8 +6,8 @@ import * as _ from "lodash";
 import Requests from '../../../../../Requests';
 import { editBackground } from "../../actions";
 import * as keywordExtractor from "keyword-extractor";
-import { SketchPicker } from 'react-color';
 import Slider from 'react-rangeslider';
+import ColorSwatch from "../element/ColorSwatch";
 // To include the default styles
 import 'react-rangeslider/lib/index.css'
 
@@ -26,6 +26,8 @@ interface IState {
     tags: Array<CheckboxStatus>;
     imageArray: Array<Object>;
     filterValue: Array<Object>;
+    colorSwatch: boolean;
+    tagInputText: string;
 }
 
 export default class BackgroundEdit extends React.Component<IProps, IState> {
@@ -50,7 +52,9 @@ export default class BackgroundEdit extends React.Component<IProps, IState> {
         this.state = {
             tags: [],
             imageArray: [],
-            filterValue: filterArray
+            filterValue: filterArray,
+            colorSwatch: false,
+            tagInputText: ""
         }
     }
 
@@ -195,8 +199,39 @@ export default class BackgroundEdit extends React.Component<IProps, IState> {
         let elementState = this.findElement(this.props.state.selectedElement);
         let color = elementState.props["backgroundColor"];
 
+        let swatchColorPicker;
+        if (this.state.colorSwatch) {
+            swatchColorPicker = <ColorSwatch color={color} callback={() => {
+                this.setState({
+                    colorSwatch: false
+                })
+            }} onChangeComplete={this.handleColorChange} />
+        } else {
+            swatchColorPicker = <div></div>
+        }
+
         return (
             <div>
+                <Row>
+                    <Input value={this.state.tagInputText} s={6} label="Add Tag" onChange={(e) => {
+                        let text = e.target.value;
+                        this.setState({
+                            tagInputText: text
+                        })
+                    }} onKeyPress={(e) => {
+                        let newCheckBox = {
+                            name: this.state.tagInputText,
+                            checked: false
+                        }
+                        let tags = [...this.state.tags, newCheckBox]
+                        if (e.key === "Enter") {
+                            this.setState({
+                                tagInputText: "",
+                                tags: tags
+                            })
+                        }
+                    }} />
+                </Row>
                 <Row>
                     {this.state.tags.map((value, key) => {
                         let defaultValue = value.checked ? "checked" : undefined;
@@ -205,7 +240,16 @@ export default class BackgroundEdit extends React.Component<IProps, IState> {
                 </Row>
                 <Row>
                     <Col s={5}>
-                        <SketchPicker color={color} colors={colors} onChangeComplete={this.handleColorChange} />
+                        <Row>
+                            <Button floating className='backgroundColor' waves='light' icon='format_color_fill' onClick={() => {
+                                this.setState({
+                                    colorSwatch: !this.state.colorSwatch
+                                })
+                            }} />
+                        </Row>
+                        <Row>
+                            {swatchColorPicker}
+                        </Row>
                     </Col>
                     <Col s={7}>
                         <Row>

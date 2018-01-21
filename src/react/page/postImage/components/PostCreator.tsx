@@ -106,7 +106,7 @@ export default class PostCreator extends React.Component<IProps, IState> {
                 width: '100%',
                 bottom: '0px',
                 backgroundColor: '#00000033',
-                color: '#BABABA'
+                color: '#FFFFFF'
             })
             this.props.dispatch(addText(brandingElement));
         })

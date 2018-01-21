@@ -1,12 +1,12 @@
 import * as React from "react";
 import { Dispatch } from 'redux';
 import { Element, State, FontStructure, Colors } from '../../postImageConstants';
-import { SketchPicker } from 'react-color';
 import { editText } from "../../actions";
 import * as _ from "lodash";
 import { Row, Col, Button, Input } from 'react-materialize';
 import * as fonts from "../../../../../font.json";
 import LoadFont from "../../../../../LoadFont";
+import ColorSwatch from "../element/ColorSwatch";
 
 interface IProps {
     state: State
@@ -14,7 +14,10 @@ interface IProps {
     dispatch: Dispatch<{}>;
 }
 
-interface IState { }
+interface IState {
+    shadowColor: boolean;
+    colorSwatch: boolean;
+}
 
 export default class TextFieldEdit extends React.Component<IProps, IState> {
     fontNameArray: Array<string>;
@@ -29,6 +32,12 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
         this.setFontWeight = this.setFontWeight.bind(this);
         this.setFontStyle = this.setFontStyle.bind(this);
         this.addShadow = this.addShadow.bind(this);
+        this.shadowColorChange = this.shadowColorChange.bind(this);
+
+        this.state = {
+            shadowColor: false,
+            colorSwatch: false
+        }
 
         this.fontNameArray = [];
         _.forEach(fonts["font"], (value: FontStructure, key: number) => {
@@ -48,9 +57,16 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
     componentDidMount() {
         this.addStyleToTextSelect();
         let element = this.findElement(this.props.state.selectedElement);
-        this.setState({
-            shadowChecked: element.props["textShadow"] ? "checked" : "unchecked"
-        })
+    }
+
+    private shadowColorChange(event) {
+        let element = this.findElement(this.props.state.selectedElement);
+        let shadow = element.props['textShadow'];
+        if (shadow) {
+            let tmp: string[] = shadow.split(" ");
+            tmp[tmp.length - 1] = event.hex;
+            this.props.dispatch(editText(element, { textShadow: tmp.join(" ") }, {}));
+        }
     }
 
     private addShadow() {
@@ -58,9 +74,6 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
         let element = this.findElement(this.props.state.selectedElement);
         let shadow = element.props['textShadow'] ? null : "2px 2px #000000";
         this.props.dispatch(editText(element, { textShadow: shadow }, {}));
-        this.setState({
-            shadowChecked: shadow ? "checked" : "unchecked"
-        })
     }
 
     private addStyleToTextSelect() {
@@ -97,17 +110,17 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
         this.props.dispatch(editText(element, { textAlign: alignment }, {}));
     }
 
-    handleColorChange(event) {
+    private handleColorChange(event) {
         let element = this.findElement(this.props.state.selectedElement);
         this.props.dispatch(editText(element, { color: event.hex }, {}));
     }
 
-    handleFontSizeChange(event) {
+    private handleFontSizeChange(event) {
         let element = this.findElement(this.props.state.selectedElement);
         this.props.dispatch(editText(element, { fontSize: event.target.value + "px" }, {}));
     }
 
-    handleFontTypeChange(event) {
+    private handleFontTypeChange(event) {
         let element = this.findElement(this.props.state.selectedElement);
         let filteredElement = _.filter(this.fontNameArray, (value) => {
             return value.indexOf(event.target.value) !== -1;
@@ -128,13 +141,33 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
         let fontSize = (element.props as any).fontSize.replace("px", "");
         let fontName: string = (element.props as any).fontFamily;
 
-        // shadow check uncheck
-        // let shadowFlag = element.props["textShadow"] ? "checked" : "unchecked";
-
         // workaround because on click not working on select tag
         setTimeout(() => {
             this.addStyleToTextSelect();
         }, 100);
+
+        // adding color picker below the button
+        let colorPicker;
+        if (this.state.shadowColor) {
+            colorPicker = <ColorSwatch color={color} callback={() => {
+                this.setState({
+                    shadowColor: false
+                })
+            }} onChangeComplete={this.shadowColorChange} />
+        } else {
+            colorPicker = <div></div>
+        }
+
+        let swatchColorPicker;
+        if (this.state.colorSwatch) {
+            swatchColorPicker = <ColorSwatch color={color} callback={() => {
+                this.setState({
+                    colorSwatch: false
+                })
+            }} onChangeComplete={this.handleColorChange} />
+        } else {
+            swatchColorPicker = <div></div>
+        }
 
         return (
             <div>
@@ -169,11 +202,30 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
                     </Col>
                 </Row>
                 <Row>
-                    <Col s={6}>
-                        <SketchPicker color={color} colors={colors} onChangeComplete={this.handleColorChange} />
+                    <Col s={3}>
+                        <Button waves='light' onClick={this.addShadow}>Shadow</Button>
+                    </Col>
+                    <Col s={3}>
+                        <Row>
+                            <Button floating className='backgroundColor' waves='light' icon='format_color_fill' onClick={() => {
+                                this.setState({
+                                    shadowColor: !this.state.shadowColor
+                                })
+                            }} />
+                        </Row>
+                        {colorPicker}
                     </Col>
                     <Col s={6}>
-                        <Button waves='light' onClick={this.addShadow}>Shadow</Button>
+                        <Row>
+                            <Button floating className='backgroundColor' waves='light' icon='format_color_fill' onClick={() => {
+                                this.setState({
+                                    colorSwatch: !this.state.colorSwatch
+                                })
+                            }} />
+                        </Row>
+                        <Row>
+                            {swatchColorPicker}
+                        </Row>
                     </Col>
                 </Row>
             </div>
