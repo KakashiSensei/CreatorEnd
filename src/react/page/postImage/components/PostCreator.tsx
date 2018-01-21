@@ -12,7 +12,7 @@ import * as  retinadomtoimage from 'retina-dom-to-image';
 import { IImagePostData, IUserDetail, status } from '../../../../Definition';
 import { history } from '../../../../Routes';
 import Auth from '../../../../Auth';
-import * as fonts from "../../../../../font.json";
+import * as fonts from "../../../../font.json";
 
 interface CheckboxStatus {
     name: string;
@@ -41,7 +41,8 @@ export default class PostCreator extends React.Component<IProps, IState> {
         this.state = {
             imageID: id
         }
-        this.removeSelectedTag = this.removeSelectedTag.bind(this);
+
+        this.getNewQuote = this.getNewQuote.bind(this);
         this.props.dispatch(resetInitialState());
     }
 
@@ -56,47 +57,62 @@ export default class PostCreator extends React.Component<IProps, IState> {
                 this.props.dispatch(updateInitialState(data.dom))
             })
         } else {
-            // add the container here
-            let containerElement: ContainerElement = new ContainerElement();
-            this.props.dispatch(addContainer(containerElement));
-
-            // random text element
-            let randomIndex = Math.floor(fonts["font"].length * Math.random());
-            let fontName = fonts["font"][randomIndex]["name"];
-
-            // add the new text here
-            Requests.getNewQuote().then((res) => {
-                this.quoteObject = res;
-                let quote = res['quoteText'];
-                let textElement: TextElement = new TextElement(quote, {
-                    left: '50px',
-                    top: '100px',
-                    fontFamily: fontName
-                });
-                this.props.dispatch(addText(textElement));
-
-                // add dummy background
-                let backgroundElement: BackgroundElement = new BackgroundElement(undefined);
-                this.props.dispatch(addBackground(backgroundElement));
-
-                // add the author here
-                let author: string = "- " + res['quoteAuthor'];
-                let authorElement: TextElement = new TextElement(author, {
-                    right: '100px',
-                    bottom: '100px',
-                    width: '200px',
-                    fontFamily: fontName
-                });
-                this.props.dispatch(addText(authorElement));
-            })
+            this.getNewQuote();
         }
     }
 
-    removeSelectedTag(event) {
-        console.log("Inside remove selected tag");
+    private getNewQuote() {
+        this.props.dispatch(resetInitialState());
+
+        // add the container here
+        let containerElement: ContainerElement = new ContainerElement();
+        this.props.dispatch(addContainer(containerElement));
+
+        // random text element
+        let randomIndex = Math.floor(fonts["font"].length * Math.random());
+        let fontName = fonts["font"][randomIndex]["name"];
+
+        // add the new text here
+        Requests.getNewQuote().then((res) => {
+            this.quoteObject = res;
+            let quote = res['quoteText'];
+            let textElement: TextElement = new TextElement(quote, {
+                left: '50px',
+                top: '100px',
+                fontFamily: fontName,
+                fontSize: '35px'
+            });
+            this.props.dispatch(addText(textElement));
+
+            // add dummy background
+            let backgroundElement: BackgroundElement = new BackgroundElement(undefined);
+            this.props.dispatch(addBackground(backgroundElement));
+
+            // add the author here
+            let author: string = "- " + res['quoteAuthor'];
+            let authorElement: TextElement = new TextElement(author, {
+                right: '100px',
+                bottom: '100px',
+                width: '200px',
+                fontFamily: fontName,
+                fontSize: '22px'
+            });
+            this.props.dispatch(addText(authorElement));
+
+            // add branding here
+            let branding: string = "Whitelight .";
+            let brandingElement: TextElement = new TextElement(branding, {
+                fontFamily: 'Molleat',
+                width: '100%',
+                bottom: '0px',
+                backgroundColor: '#00000033',
+                color: '#BABABA'
+            })
+            this.props.dispatch(addText(brandingElement));
+        })
     }
 
-    savePost() {
+    private savePost() {
         let maxWidth = this.props.postReducer.container.props["width"];
         let maxHeight = this.props.postReducer.container.props["height"];
         let state = this.props.postReducer;
@@ -132,12 +148,10 @@ export default class PostCreator extends React.Component<IProps, IState> {
                     } else {
                         promise = Requests.addNewImage(postImageData);
                     }
-
-                    promise.then(() => {
-                        let location = "/";
-                        history.push(location);
-                    })
                 })
+
+                let location = "/";
+                history.push(location);
             }
             reader.readAsDataURL(blob);
         })
@@ -161,7 +175,7 @@ export default class PostCreator extends React.Component<IProps, IState> {
 
         return (
             <Row className="marginTop">
-                <Col s={6} className='containerDisplay'>
+                <Col s={7} className='containerDisplay'>
                     <Row id="saveDiv">
                         <div id="containerDiv" style={containerStyle}>
                             {postReducer.components.map((elem, id) => {
@@ -171,12 +185,15 @@ export default class PostCreator extends React.Component<IProps, IState> {
                         </div>
                     </Row>
                     <Row>
-                        <Col>
+                        <Col s={2}>
                             <Button waves='light' onClick={this.savePost}>save</Button>
+                        </Col>
+                        <Col s={1}>
+                            <Button floating className='backgroundColor' waves='light' icon='refresh' onClick={this.getNewQuote} />
                         </Col>
                     </Row>
                 </Col>
-                <Col s={6}>
+                <Col s={5}>
                     <Row>
                         {EditableElement}
                     </Row>

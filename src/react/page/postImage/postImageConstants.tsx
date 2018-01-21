@@ -37,7 +37,6 @@ export class Element {
         this.data = {};
         this.props = {
             position: 'relative',
-            display: 'inline-block',
             margin: '0px',
             padding: '0px'
         }
@@ -91,7 +90,6 @@ export class BackgroundElement extends Element {
         let random = Math.floor(Colors.length * Math.random());
         let color = Colors[random];
         this.props = _.assign(this.props, {
-            position: 'absolute',
             backgroundColor: color,
             backgroundRepeat: `no-repeat`,
             backgroundPosition: `50% 50%`,

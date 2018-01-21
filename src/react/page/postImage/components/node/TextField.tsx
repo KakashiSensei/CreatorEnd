@@ -3,7 +3,7 @@ import BaseElement from "./baseNode/BaseElement";
 import { Element, Point } from '../../postImageConstants';
 import { Dispatch } from 'redux';
 import { editText } from "../../actions/index";
-import * as fonts from "../../../../../../font.json";
+import * as fonts from "../../../../../font.json";
 import * as _ from "lodash";
 import { FontStructure } from "../../../../page/postImage/postImageConstants";
 import LoadFont from "../../../../../LoadFont";
@@ -38,6 +38,7 @@ export default class TextField extends BaseElement {
         let fontName = this.props.element.props["fontFamily"];
         let fontArray: Array<FontStructure> = fonts["font"]
         let fontInJSON = _.find(fontArray, (value: FontStructure, key) => {
+            // console.log(value);
             return value.name.indexOf(fontName) !== -1;
         })
         
@@ -109,7 +110,6 @@ export default class TextField extends BaseElement {
     }
 
     onBlurOut(event) {
-        console.log("Textfield blur out");
         this.setState({
             editable: false
         })

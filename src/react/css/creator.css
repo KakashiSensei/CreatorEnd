@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Molleat";
+    src: url("../../asset/font/Molleat.ttf");
+}
+
 a{
     color: #26a69a;
 }

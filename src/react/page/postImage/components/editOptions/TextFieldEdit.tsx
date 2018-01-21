@@ -5,7 +5,7 @@ import { SketchPicker } from 'react-color';
 import { editText } from "../../actions";
 import * as _ from "lodash";
 import { Row, Col, Button, Input } from 'react-materialize';
-import * as fonts from "../../../../../../font.json";
+import * as fonts from "../../../../../font.json";
 import LoadFont from "../../../../../LoadFont";
 
 interface IProps {
@@ -14,8 +14,7 @@ interface IProps {
     dispatch: Dispatch<{}>;
 }
 
-interface IState {
-}
+interface IState { }
 
 export default class TextFieldEdit extends React.Component<IProps, IState> {
     fontNameArray: Array<string>;
@@ -27,6 +26,9 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
         this.handleFontSizeChange = this.handleFontSizeChange.bind(this);
         this.handleFontTypeChange = this.handleFontTypeChange.bind(this);
         this.setAlignment = this.setAlignment.bind(this);
+        this.setFontWeight = this.setFontWeight.bind(this);
+        this.setFontStyle = this.setFontStyle.bind(this);
+        this.addShadow = this.addShadow.bind(this);
 
         this.fontNameArray = [];
         _.forEach(fonts["font"], (value: FontStructure, key: number) => {
@@ -45,6 +47,20 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
 
     componentDidMount() {
         this.addStyleToTextSelect();
+        let element = this.findElement(this.props.state.selectedElement);
+        this.setState({
+            shadowChecked: element.props["textShadow"] ? "checked" : "unchecked"
+        })
+    }
+
+    private addShadow() {
+        // text-shadow: 2px 2px #ff0000;
+        let element = this.findElement(this.props.state.selectedElement);
+        let shadow = element.props['textShadow'] ? null : "2px 2px #000000";
+        this.props.dispatch(editText(element, { textShadow: shadow }, {}));
+        this.setState({
+            shadowChecked: shadow ? "checked" : "unchecked"
+        })
     }
 
     private addStyleToTextSelect() {
@@ -62,7 +78,19 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
         (inputElement as any).style.fontFamily = fontFamily;
     }
 
-    setAlignment(event) {
+    private setFontWeight(event) {
+        let element = this.findElement(this.props.state.selectedElement);
+        let fontWeight = element.props['fontWeight'] === "bold" ? "normal" : "bold";
+        this.props.dispatch(editText(element, { fontWeight: fontWeight }, {}));
+    }
+
+    private setFontStyle(event) {
+        let element = this.findElement(this.props.state.selectedElement);
+        let fontStyle = element.props['fontStyle'] === "italic" ? "normal" : "italic";
+        this.props.dispatch(editText(element, { fontStyle: fontStyle }, {}));
+    }
+
+    private setAlignment(event) {
         let innerTextArray: Array<string> = event.target.innerText.split("_");
         let alignment = innerTextArray[innerTextArray.length - 1];
         let element = this.findElement(this.props.state.selectedElement);
@@ -100,6 +128,9 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
         let fontSize = (element.props as any).fontSize.replace("px", "");
         let fontName: string = (element.props as any).fontFamily;
 
+        // shadow check uncheck
+        // let shadowFlag = element.props["textShadow"] ? "checked" : "unchecked";
+
         // workaround because on click not working on select tag
         setTimeout(() => {
             this.addStyleToTextSelect();
@@ -117,7 +148,7 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
                     </Col>
 
                     <Col s={8}>
-                        <Input style={{ fontFamily: fontName }} s={12} id="checkingFontType" type='select' label="Type" value={fontName} onChange={this.handleFontTypeChange}>
+                        <Input style={{ fontFamily: fontName }} s={12} id="checkingFontType" type='select' label="Type" value={fontName.split(",")[0].split("'").join("")} onChange={this.handleFontTypeChange}>
                             {fonts["font"].map((value: FontStructure, key) => {
                                 let fontName = value.name.split(",")[0].split("'").join("");
                                 this.fontNameArray.push(fontName);
@@ -127,12 +158,23 @@ export default class TextFieldEdit extends React.Component<IProps, IState> {
                     </Col>
                 </Row>
                 <Row>
-                    <Button floating className='baseMargin backgroundColor' waves='light' icon='format_align_left' onClick={this.setAlignment} />
-                    <Button floating className='baseMargin backgroundColor' waves='light' icon='format_align_center' onClick={this.setAlignment} />
-                    <Button floating className='baseMargin backgroundColor' waves='light' icon='format_align_right' onClick={this.setAlignment} />
+                    <Col s={6}>
+                        <Button floating className='baseMargin backgroundColor' waves='light' icon='format_align_left' onClick={this.setAlignment} />
+                        <Button floating className='baseMargin backgroundColor' waves='light' icon='format_align_center' onClick={this.setAlignment} />
+                        <Button floating className='baseMargin backgroundColor' waves='light' icon='format_align_right' onClick={this.setAlignment} />
+                    </Col>
+                    <Col s={6}>
+                        <Button floating className='baseMargin backgroundColor' waves='light' icon='format_bold' onClick={this.setFontWeight} />
+                        <Button floating className='baseMargin backgroundColor' waves='light' icon='format_italic' onClick={this.setFontStyle} />
+                    </Col>
                 </Row>
                 <Row>
-                    <SketchPicker color={color} colors={colors} onChangeComplete={this.handleColorChange} />
+                    <Col s={6}>
+                        <SketchPicker color={color} colors={colors} onChangeComplete={this.handleColorChange} />
+                    </Col>
+                    <Col s={6}>
+                        <Button waves='light' onClick={this.addShadow}>Shadow</Button>
+                    </Col>
                 </Row>
             </div>
         )

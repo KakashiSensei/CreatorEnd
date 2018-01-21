@@ -7,7 +7,7 @@ module.exports = {
         path: path.join(__dirname, "dist"),
         filename: "bundle.js"
     },
-    devtool: 'eval',
+    devtool: 'cheap-source-map',
     resolve: {
         // Look for modules in .ts(x) files first, then .js
         extensions: ['.ts', '.tsx', '.js', '.css', '.jpg', '.png'],
@@ -49,12 +49,8 @@ module.exports = {
                 loader: "file-loader?name=src/asset/[name].[ext]"
             },
             {
-                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "url-loader?limit=10000&mimetype=application/font-woff&name=src/asset/font/[name].[ext]"
-            },
-            {
-                test: /\.(ttf|eot|otf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "file-loader?name=src/asset/font/[name].[ext]"
+                test: /\.(eot|svg|ttf|woff|woff2)$/,
+                loader: 'file-loader?name=src/asset/font/[name].[ext]'
             }
         ]
     },

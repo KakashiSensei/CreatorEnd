@@ -1,4 +1,4 @@
-import * as fonts from "../font.json";
+import * as fonts from "./font.json";
 import * as _ from "lodash";
 import { FontStructure } from "./react/page/postImage/postImageConstants";
 
@@ -22,12 +22,15 @@ namespace LoadFont {
                 !fontObject && fontArray.push(fontJSON[i]);
             }
         }
-        
+
         _.forEach(fontArray, (value, key) => {
-            var newElement = document.createElement("style");
-            newElement.type = "text/css"; 
-            newElement.innerHTML = `@font-face {font-family: ${value.name};  src: url(${value.ttf});}`;   
-            document.getElementsByTagName('head')[0].appendChild(newElement);
+            fetch(value.url, { method: 'GET' }).then((data) => {
+                return data.text();
+            }).then((data) => {
+                let newElement = document.createElement("style");
+                newElement.innerHTML = data;
+                document.getElementsByTagName('head')[0].appendChild(newElement);
+            })
         })
     }
 }

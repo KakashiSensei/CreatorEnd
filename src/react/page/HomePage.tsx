@@ -21,6 +21,8 @@ interface IState {
 }
 
 export default class HomePage extends React.Component<IProps, IState> {
+    timeOutID: any;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -35,6 +37,15 @@ export default class HomePage extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
+        this.requestDisplayData();
+    }
+
+    componentWillUnmount() {
+        console.log("Removing from DOM");
+        clearTimeout(this.timeOutID);
+    }
+
+    private requestDisplayData() {
         //make get request for questions
         Request.getAllQuizQuestion()
             .then((data) => {
@@ -59,6 +70,10 @@ export default class HomePage extends React.Component<IProps, IState> {
                     imagePostDataReceived: sortedData
                 })
             })
+
+        this.timeOutID = setTimeout(() => {
+            this.requestDisplayData()
+        }, 10000);
     }
 
     deleteQuizClicked(e) {
@@ -75,11 +90,11 @@ export default class HomePage extends React.Component<IProps, IState> {
             })
     }
 
-    deleteImagePostClicked(e){
+    deleteImagePostClicked(e) {
         Request.deleteImage(e._id)
-        .then((data) => {
-            this.componentDidMount();
-        })
+            .then((data) => {
+                this.componentDidMount();
+            })
     }
 
     render() {
