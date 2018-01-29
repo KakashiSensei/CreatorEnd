@@ -48,8 +48,8 @@ export class ContainerElement extends Element {
         super();
         this.props = _.assign(this.props, {
             backgroundColor: '#CCCCCC',
-            width: '698px',
-            height: '367px',
+            width: '600px',
+            height: '600px',
             margin: '0px',
             padding: '0px',
             overflow: 'hidden'

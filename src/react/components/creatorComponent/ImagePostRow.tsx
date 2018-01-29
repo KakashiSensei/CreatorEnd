@@ -22,6 +22,7 @@ interface IState {
 
 export default class ImagePostRow extends React.Component<IProps, IState>{
     private userDetail: IUserDetail;
+    private TIME_INTERVAL: number = 8;
     constructor(props) {
         super(props);
         this.userDetail = Auth.getUserDetail();
@@ -96,11 +97,11 @@ export default class ImagePostRow extends React.Component<IProps, IState>{
                             let postTime = 0;
                             if (data.postTime) {
                                 let momentLastTime: moment.Moment = moment.unix(data.postTime);
-                                momentLastTime.add(3, 'hours').toDate();
+                                momentLastTime.add(this.TIME_INTERVAL, 'hours').toDate();
                                 postTime = momentLastTime.unix();
                             }
                             let dateNow = moment();
-                            dateNow.add(3, 'hours').toDate();
+                            dateNow.add(1, 'minutes').toDate();
                             let maxTime: number = Math.max(postTime, dateNow.unix());
                             let imageObject = {
                                 url: this.props.element.imageUrl,
